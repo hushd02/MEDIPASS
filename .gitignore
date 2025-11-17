@@ -1,1 +1,6 @@
-/bin/
+# Fichiers de l'IDE Eclipse (à ignorer)
+.classpath
+.project
+
+# Sorties de compilation et fichiers temporaires
+/bin
