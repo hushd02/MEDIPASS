@@ -1,6 +1,9 @@
-package projet_medical_POO;
+package medipass.ui;
 
 import java.time.LocalTime;
+
+import medipass.models.Disponibilite;
+import medipass.services.GestionDisponibilites;
 
 
 public class Test {

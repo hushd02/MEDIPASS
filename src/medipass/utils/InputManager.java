@@ -1,4 +1,4 @@
-package projet_medical_POO;
+package medipass.utils;
 
 import java.util.Scanner;
 

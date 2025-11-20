@@ -1,4 +1,4 @@
-package projet_medical_POO;
+package medipass.models;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;

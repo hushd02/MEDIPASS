@@ -1,7 +1,11 @@
-package projet_medical_POO;
+package medipass.services;
 
 import java.time.LocalTime;
 import java.util.Set;
+
+import medipass.models.Disponibilite;
+import medipass.utils.InputManager;
+
 import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.List;
