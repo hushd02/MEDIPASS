@@ -1,70 +1,68 @@
 package medipass.models;
+
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Disponibilite {
 	// attributs
-	private int numOrdre;
+	private int id;
 	private int jour;
 	private LocalTime heure;
 	private boolean estlibre;
-	//pour recencer toutes les instances de la classe
-	private static final List<Disponibilite> toutesLesDisponibilites = new ArrayList<>();
+	private int idMedecin;
 	
 	//méthodes
 	//constructeur
-	public Disponibilite(int numOrdre, int jour, LocalTime heure, boolean estlibre) {
-		this.numOrdre = numOrdre;
+	public Disponibilite(int id, int jour, LocalTime heure, boolean estlibre, int idMedecin) {
+		this.id = id;
 		this.jour = jour;
 		this.heure = heure;
 		this.estlibre = estlibre;
-	//enregistrement de l'instance dès sa création
-		toutesLesDisponibilites.add(this);
+		this.idMedecin = idMedecin;
+	}
+	public Disponibilite( int jour, LocalTime heure, boolean estlibre, int idMedecin) {
+		this.jour = jour;
+		this.heure = heure;
+		this.estlibre = estlibre;
+		this.idMedecin = idMedecin;
 	}
 	
-	//setter et getter
-	public int getNumOrdre() {
-		return numOrdre;
-	}
-	public void setNumOrdre(int numOrdre) {
-		this.numOrdre = numOrdre;
-	}
-
+	
+	//getter
+	public int getId() {
+		return id;
+	}	
 	public int getJour() {
 		return jour;
+	}
+	public LocalTime getHeure() {
+		return heure;
+	}	
+	public boolean isEstlibre() {
+		return estlibre;
+	}
+	public int getIdMedecin() {
+		return idMedecin;
+	}
+	
+	//setter
+	public void setId(int id) {
+		this.id = id;
 	}
 	public void setJour(int jour) {
 		this.jour = jour;
 	}
-
-	public LocalTime getHeure() {
-		return heure;
-	}
 	public void setHeure(LocalTime heure) {
 		this.heure = heure;
-	}
-
-	public boolean isEstlibre() {
-		return estlibre;
 	}
 	public void setEstlibre(boolean estlibre) {
 		this.estlibre = estlibre;
 	}
-
-	public static List<Disponibilite> getAllInstances() {
-        return toutesLesDisponibilites;
-    }
-
-	//autres méthodes
-	public static void supprimerInstance(Disponibilite dispo) {
-		if(dispo.isEstlibre()) {
-		    toutesLesDisponibilites.remove(dispo);
-		    System.out.println("Disponibilité supprimée.");
-		}else
-			System.out.println("Suppression impossible, une consultation a été programmée à cette heure.");
+	public void setIdMedecin(int idMedecin) {
+		this.idMedecin = idMedecin;
 	}
-	
+
+
+	//autres méthodes	
 	public static boolean verifierHeure(int h) {
 		if (h < 0 || h > 23)
 			return false;
