@@ -1,6 +1,16 @@
-# Fichiers de l'IDE Eclipse (à ignorer)
+# Fichiers générés par l'exécution de Java
+*.class
+*.jar
+/bin/
+
+# Fichiers de la base de données locale
+*.db
+medipass.db
+
+# Dépendances externes (pilotes JDBC)
+/lib/*.jar
+
+# Fichiers spécifiques à l'IDE (ex: Eclipse ou IntelliJ)
 .classpath
 .project
-
-# Sorties de compilation et fichiers temporaires
-/bin
+.settings/
