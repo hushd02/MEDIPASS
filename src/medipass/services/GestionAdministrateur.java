@@ -8,8 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import medipass.models.Administrateur;
-import medipass.models.Infirmier;
+import medipass.models.AdministrateurY;
+import medipass.models.InfirmierY;
 import medipass.utils.ControleBD;
 
 public class GestionAdministrateur {
@@ -40,7 +40,7 @@ public class GestionAdministrateur {
         }
     }
 	
-	public void inserer(Administrateur admin) {
+	public void inserer(AdministrateurY admin) {
         String sql = "INSERT INTO Pharmacien (nom, prenom, ident, motDePasse, age, sexe,"
         		+ " numTel, email, nivAcces) "
         		+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -72,8 +72,8 @@ public class GestionAdministrateur {
         }
     }
 	
-	public List<Administrateur> toutRecuperer() {
-        List<Administrateur> allAdministrateur = new ArrayList<>();
+	public List<AdministrateurY> toutRecuperer() {
+        List<AdministrateurY> allAdministrateur = new ArrayList<>();
         String sql = "SELECT id, nom, prenom, ident,  age, sexe,"
         		+ " numTel, email, motDePasse, nivAcces FROM Administrateur";
 
@@ -82,7 +82,7 @@ public class GestionAdministrateur {
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 // Crée un objet Medecin à partir de chaque ligne du ResultSet
-                Administrateur doc = new Administrateur(
+                AdministrateurY doc = new AdministrateurY(
                         rs.getInt("id"),
                         rs.getString("nom"),
                         rs.getString("prenom"),

@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import medipass.models.Medecin;
+import medipass.models.MedecinY;
 import medipass.utils.ControleBD;
 
 public class GestionMedecin {
@@ -41,7 +41,7 @@ public class GestionMedecin {
         }
     }
 	
-	public void insererM(Medecin doc) {
+	public void insererM(MedecinY doc) {
         String sql = "INSERT INTO Medecin (nom, prenom, ident, age, sexe, numTel,"
         		+ " email, motDePasse, specialiste, numOrdreM, nivAcces) "
         		+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -76,8 +76,8 @@ public class GestionMedecin {
         }
     }
 	
-	public List<Medecin> recupererAllDoc() {
-        List<Medecin> allMedecin = new ArrayList<>();
+	public List<MedecinY> recupererAllDoc() {
+        List<MedecinY> allMedecin = new ArrayList<>();
         String sql = "SELECT id, nom, prenom, ident, motDePasse, age, sexe,"
         		+ " numTel, email, nivAcces, numOrdreM, specialiste FROM Medecin";
 
@@ -86,7 +86,7 @@ public class GestionMedecin {
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 // Crée un objet Medecin à partir de chaque ligne du ResultSet
-                Medecin doc = new Medecin(
+                MedecinY doc = new MedecinY(
                 		
                     rs.getInt("id"),
                     rs.getString("nom"),
@@ -110,7 +110,7 @@ public class GestionMedecin {
         return allMedecin;
     }
 	
-	public void supprimerM(Medecin doc) {
+	public void supprimerM(MedecinY doc) {
 
         String sql = "DELETE FROM Disponibilites WHERE numOrdre = ?";
 

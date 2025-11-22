@@ -1,17 +1,17 @@
 package medipass.models;
 
-public class Infirmier extends Utilisateur{
+public class InfirmierY extends Utilisateur{
 	
 	private long numOrdreI;
 	
 	//constructeur
-	public Infirmier(int id, String nom, String prenom,String ident, int age, boolean sexe,
+	public InfirmierY(int id, String nom, String prenom,String ident, int age, boolean sexe,
 			long numTel, String email, String motDePasse,int nivAcces, long numOrdreI) {
 		
 		super (id, nom, prenom, ident, age, sexe, numTel, email, motDePasse, nivAcces);
 		this.numOrdreI = numOrdreI;
 	}
-	public Infirmier(String nom, String prenom, String ident, int age, boolean sexe,
+	public InfirmierY(String nom, String prenom, String ident, int age, boolean sexe,
 			long numTel, String email, String motDePasse,int nivAcces, long numOrdreI) {
 		
 		super(nom, prenom,ident, age, sexe, numTel, email, motDePasse, nivAcces);

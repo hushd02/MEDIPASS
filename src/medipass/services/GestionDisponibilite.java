@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalTime;
 import medipass.models.Disponibilite;
-import medipass.models.Medecin;
+import medipass.models.MedecinY;
 import medipass.utils.*;
 
 import java.util.ArrayList;
@@ -233,8 +233,8 @@ public class GestionDisponibilite {
 
 
 	//méthodes pour afficher la disponibilité du côté patient et médecin
-	public void consulterDispoParInfirmier(Medecin doc) {
-		String specialite = Medecin.specialiteDoc(doc.getSpecialite());
+	public void consulterDispoParInfirmier(MedecinY doc) {
+		String specialite = MedecinY.specialiteDoc(doc.getSpecialite());
 		System.out.println("Information du Médecin : ");
 		System.out.println(doc.getId() +"-/ Nom et prénom : "+ doc.getNom()+" "+ doc.getPrenom()+" Spécialité :"+ specialite);
 		System.out.println("Disponibilité :");
@@ -249,7 +249,7 @@ public class GestionDisponibilite {
 		}System.out.println(" ");
 		
 	}
-	public void consulterDispoParMedecin(Medecin doc) {
+	public void consulterDispoParMedecin(MedecinY doc) {
 		System.out.println("---- Option en cours : Affichage des disponibilités enreistrées ----");
 		System.out.println("Disponibilité :");
         GestionDisponibilite gest = new GestionDisponibilite();
@@ -263,7 +263,7 @@ public class GestionDisponibilite {
 	}
 	
 	//méthode pour réserver une disponibilité
-	public void reserverDisponibilite(Medecin doc) {
+	public void reserverDisponibilite(MedecinY doc) {
 		System.out.println("Option en cours : Réservation d'une consultation");
 		
 		Scanner scanner = InputManager.getInstance().getScanner();
@@ -362,7 +362,7 @@ public class GestionDisponibilite {
 	}
 	
 	//méthodes pour supprimer des disponibilités
-	public void supprimerDisponibilite(Medecin doc) {
+	public void supprimerDisponibilite(MedecinY doc) {
 		System.out.println("Option en cours : Suppression d'une disponibilité");
 		
 		Scanner scanner = InputManager.getInstance().getScanner();
@@ -463,7 +463,7 @@ public class GestionDisponibilite {
 			}while(repeter.equalsIgnoreCase("y"));
 		}
 	
-	public void ajouterDisponibilite(Medecin doc ) {
+	public void ajouterDisponibilite(MedecinY doc ) {
 		System.out.println("Option en cours : Ajout d'une disponibilité");
 
 		Scanner scanner = InputManager.getInstance().getScanner();
