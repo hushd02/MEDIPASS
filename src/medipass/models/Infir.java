@@ -1,7 +1,8 @@
 package medipass.models;
 
-public class InfirmierY extends Utilisateur{
-	
+public class Infir {
+/*
+		
 	private long numOrdreI;
 	
 	//constructeur
@@ -27,5 +28,10 @@ public class InfirmierY extends Utilisateur{
 	public void setNumOrdreI(long numOrdreI) {
 		this.numOrdreI = numOrdreI;
 	}
-	
+/*	
+	    public Infirmier(String id, String nom, String prenom, String login, String password) {
+        super(id, nom, prenom, login, password, Role.INFIRMIER);
+    }
+	*/
+	*/
 }

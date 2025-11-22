@@ -8,10 +8,8 @@ lorsque la méthode contenu ferme le scanner, il ne peut plus être utiliser dan
 
 public class InputManager {
 
-    // 1. Déclaration de l'instance unique (instance)
     private static InputManager instance; 
     
-    // 2. Déclaration du Scanner, qui sera la ressource unique
     private final Scanner scanner; 
 
     //Constructeur Privé : Empêche l'instanciation directe de cette classe de l'extérieur.

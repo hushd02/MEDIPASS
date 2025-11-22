@@ -1,5 +1,7 @@
 package medipass.models;
 
+import models.Utilisateur;
+
 public class MedecinY extends Utilisateur{
 	
 	//attributs
@@ -58,4 +60,7 @@ public class MedecinY extends Utilisateur{
 				return null;
 		}
 	}
+    public Medecin(String id, String nom, String prenom, String login, String password) {
+        super(id, nom, prenom, login, password, Role.MEDECIN);
+    }
 }

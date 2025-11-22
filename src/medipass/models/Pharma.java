@@ -1,5 +1,7 @@
 package medipass.models;
 
+import medipass.models.Role;
+
 public class PharmacienY extends Utilisateur{
 	
 	private long numOrdreP;
@@ -27,5 +29,9 @@ public class PharmacienY extends Utilisateur{
 	public void setNumOrdreP(long numOrdreP) {
 		this.numOrdreP = numOrdreP;
 	}
+
+    public Pharmacien(String id, String nom, String prenom, String login, String password) {
+        super(id, nom, prenom, login, password, Role.PHARMACIEN);
+    }
 	
 }
