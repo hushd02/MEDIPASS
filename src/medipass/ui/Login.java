@@ -1,40 +1,36 @@
 package medipass.ui;
 
-import medipass.models.utilisateur;
+import medipass.models.Utilisateur;
 import medipass.services.Authentification;
 import medipass.utils.Input;
-import models.*;
 
 public class Login {
 
-    private Authentification authService;
-
-    public Login(Authentification authService) {
-        this.authService = authService;
-    }
 
     public void afficher() {
 
         System.out.println("===============");
         System.out.println("   CONNEXION   ");
         System.out.println("===============");
+        
+        Utilisateur user;
+        do {
+	        System.out.println("Veuillez entrer vos informations personnelles");
+	        String login = Input.readNonEmpty("Login : ");
+	        String password = Input.readNonEmpty("Password  : ");
+	        
+	        Authentification auth = new Authentification();
+	        user = auth.connexion(login, password);
 
-        String login = Input.readNonEmpty("Login : ");
-        String password = Input.readNonEmpty("Password  : ");
+        }while(user==null);
 
-        utilisateur user = authService.connexion(login, password);
 
-        if (user == null) {
-            System.out.println("?????? Login ou mot de passe incorrect ! ??????");
-            return; // On revient au menu principal
-        }
-
-        System.out.println("§§§§ Connexion réussie. Bonjour " + user.getNomComplet() + " §§§§");
+        System.out.println("§§§§ Connexion réussie. Bonjour " +user.getNom()+ " §§§§");
 
         switch (user.getRole()) {
 
             case ADMIN:
-                new AdminPanel(authService).afficher();
+            	System.out.println("(Menu médecin en construction)");
                 break;
 
             case MEDECIN:
@@ -51,3 +47,4 @@ public class Login {
         }
     }
 }
+

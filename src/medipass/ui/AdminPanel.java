@@ -1,16 +1,10 @@
 package medipass.ui;
 
-import medipass.models.Role;
-import medipass.services.Authentification;
 import medipass.utils.Input;
 
 public class AdminPanel {
 
-    private Authentification authService;
 
-    public AdminPanel(Authentification authService) {
-        this.authService = authService;
-    }
 
     public void afficher() {
 
@@ -34,7 +28,6 @@ public class AdminPanel {
                     break;
 
                 case 2:
-                    authService.afficherUtilisateurs();
                     break;
 
                 case 0:
@@ -68,16 +61,16 @@ public class AdminPanel {
 
         switch (c) {
             case 1:
-                authService.creerCompteAutomatique(Role.ADMIN);
+
                 break;
             case 2:
-                authService.creerCompteAutomatique(Role.MEDECIN);
+
                 break;
             case 3:
-                authService.creerCompteAutomatique(Role.INFIRMIER);
+
                 break;
             case 4:
-                authService.creerCompteAutomatique(Role.PHARMACIEN);
+
                 break;
             default:
                 System.out.println(" ?????? Choix invalide ! ??????");
