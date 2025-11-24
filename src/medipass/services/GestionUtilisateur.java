@@ -15,7 +15,7 @@ import medipass.utils.ControleBD;
 
 public class GestionUtilisateur {
 
-	public static void creerTableI() {
+	public static void creerTable() {
         // C'est ici que vous placez la commande SQL
         String sql = "CREATE TABLE IF NOT EXISTS Utilisateur ("
         		+ "id INTEGER PRIMARY KEY,"
@@ -47,7 +47,7 @@ public class GestionUtilisateur {
 	
 	public void inserer(Utilisateur user) {
         String sql = "INSERT INTO Utilisateur (nom, prenom, login, age, sexe, numTel,"
-        		+ " email, password, role,nivAcces, numOrdre, specialiste) "
+        		+ " email, password, role,nivAcces, numOrdre, specialite) "
         		+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = ControleBD.getConnection(); // Récupère la connexion
@@ -84,7 +84,7 @@ public class GestionUtilisateur {
 	public List<Utilisateur> recupererAll() {
         List<Utilisateur> allUtilisateur = new ArrayList<>();
         String sql = "SELECT id, nom, prenom, login, age, sexe,"
-        		+ " numTel, email, password, nivAcces, numOrdre, specialiste FROM Utilisateur";
+        		+ " numTel, email, password, nivAcces, numOrdre, specialite FROM Utilisateur";
 
         try (Connection conn = ControleBD.getConnection();
              Statement stmt = conn.createStatement();
@@ -118,52 +118,53 @@ public class GestionUtilisateur {
         return allUtilisateur;
     }
 	
-public List<Utilisateur> recupererParRole(Role role) {
-        
-        List<Utilisateur> utilisateursFiltres = new ArrayList<>();
-        
-        // La requête corrigée, sélectionnant les utilisateurs dont le rôle correspond au paramètre
-        String sql = "SELECT id, nom, prenom, login, age, sexe, numTel, email, password, nivAcces, numOrdre, specialiste, role"
-                   + " FROM Utilisateur "
-                   + " WHERE role = ?"; 
-
-        try (Connection conn = ControleBD.getConnection();
-            
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            //Définir le paramètre du rôle : conversion de l'Enum en String
-            pstmt.setString(1, role.name()); 
-
-            try (ResultSet rs = pstmt.executeQuery()) {
-            	 while (rs.next()) {
-                 	Role roleObj = Role.valueOf(rs.getString("role"));
-                 	Specialite speObj = Specialite.valueOf(rs.getString("specialite"));
-
-                     Utilisateur user = new Utilisateur(
-                     		
-                         rs.getInt("id"),
-                         rs.getString("nom"),
-                         rs.getString("prenom"),
-                         rs.getString("login"),
-                         rs.getInt("age"),
-                         rs.getBoolean("sexe"),
-                         rs.getLong("numTel"),
-                         rs.getString("email"),
-                         rs.getString("password"),
-                         roleObj,
-                         rs.getInt("nivAcces"),
-                         rs.getLong("numOdreM"),
-                         speObj
-                  
-                     );
-                    utilisateursFiltres.add(user);
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Erreur lors de la récupération par rôle : " + e.getMessage());
-        }
-        return utilisateursFiltres;
-    }
+	public List<Utilisateur> recupererParRole(Role role) {
+	        
+	        List<Utilisateur> utilisateursFiltres = new ArrayList<>();
+	        
+	        // La requête corrigée, sélectionnant les utilisateurs dont le rôle correspond au paramètre
+	        String sql = "SELECT id, nom, prenom, login, age, sexe, numTel, email, password, nivAcces, numOrdre, specialite, role"
+	                   + " FROM Utilisateur "
+	                   + " WHERE role = ?"
+	                   + "ORDER BY specialiste ASC, id ASC"; 
+	
+	        try (Connection conn = ControleBD.getConnection();
+	            
+	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	            
+	            //Définir le paramètre du rôle : conversion de l'Enum en String
+	            pstmt.setString(1, role.name()); 
+	
+	            try (ResultSet rs = pstmt.executeQuery()) {
+	            	 while (rs.next()) {
+	                 	Role roleObj = Role.valueOf(rs.getString("role"));
+	                 	Specialite speObj = Specialite.valueOf(rs.getString("specialite"));
+	
+	                     Utilisateur user = new Utilisateur(
+	                     		
+	                         rs.getInt("id"),
+	                         rs.getString("nom"),
+	                         rs.getString("prenom"),
+	                         rs.getString("login"),
+	                         rs.getInt("age"),
+	                         rs.getBoolean("sexe"),
+	                         rs.getLong("numTel"),
+	                         rs.getString("email"),
+	                         rs.getString("password"),
+	                         roleObj,
+	                         rs.getInt("nivAcces"),
+	                         rs.getLong("numOdreM"),
+	                         speObj
+	                  
+	                     );
+	                    utilisateursFiltres.add(user);
+	                }
+	            }
+	        } catch (SQLException e) {
+	            System.err.println("Erreur lors de la récupération par rôle : " + e.getMessage());
+	        }
+	        return utilisateursFiltres;
+	    }
 
 	
 	public void supprimer(Utilisateur user) {

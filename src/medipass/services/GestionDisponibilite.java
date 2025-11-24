@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalTime;
 import medipass.models.Disponibilite;
-import medipass.models.Medecin;
+import medipass.models.Utilisateur;
 import medipass.utils.ControleBD;
 import medipass.utils.InputManager;
 
@@ -24,8 +24,7 @@ public class GestionDisponibilite {
                 + "jour INTEGER NOT NULL,"
                 + "heure TEXT NOT NULL,"
                 + "estLibre INTEGER NOT NULL,"
-                + "FOREIGN KEY(idMedecin) REFERENCES Utilisateur(id),"
-                + "CONSTRAINT unique_creneau UNIQUE (idMedecin, jour, heure)"
+                + "FOREIGN KEY(idMedecin) REFERENCES Utilisateur(id)"
                 + ");";
         
         try (Connection conn = ControleBD.getConnection(); // 1. Ouvre la connexion à la BD
@@ -41,27 +40,32 @@ public class GestionDisponibilite {
         }
     }
 	
-    public List<Disponibilite> recupererAllDispo() {
+    public List<Disponibilite> recupererAllDispo(int idMedecin) {
         List<Disponibilite> allDisponibilite = new ArrayList<>();
-        String sql = "SELECT numOrdre, jour, heure, estLibre, idMedecin FROM Disponibilites";
+        String sql = "SELECT numOrdre, jour, heure, estLibre, idMedecin FROM Disponibilites"
+        		+ "FROM idMedecin = ?";
 
-        try (Connection conn = ControleBD.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) { // Exécute la requête de sélection
-
-            while (rs.next()) {
-                // Crée un objet Disponibilite à partir de chaque ligne du ResultSet
-                Disponibilite dispo = new Disponibilite(
-                		
-                	rs.getInt("id"),
-                    rs.getInt("jour"),
-                    LocalTime.parse(rs.getString("heure")), // Convertit String en LocalTime
-                    rs.getBoolean("estLibre"),
-                    rs.getInt("idMedecin")
-                    
-                );
-                allDisponibilite.add(dispo);
-            }
+        try(Connection conn = ControleBD.getConnection();
+	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        	
+        	pstmt.setInt(1, idMedecin); 
+        	
+	        try (ResultSet rs = pstmt.executeQuery()) { // Exécute la requête de sélection
+	
+	            while (rs.next()) {
+	                // Crée un objet Disponibilite à partir de chaque ligne du ResultSet
+	                Disponibilite dispo = new Disponibilite(
+	                		
+	                	rs.getInt("id"),
+	                    rs.getInt("jour"),
+	                    LocalTime.parse(rs.getString("heure")), // Convertit String en LocalTime
+	                    rs.getBoolean("estLibre"),
+	                    rs.getInt("idMedecin")
+	                    
+	                );
+	                allDisponibilite.add(dispo);
+	            }
+	        }
         } catch (SQLException e) {
             System.err.println("Erreur lors de la récupération des disponibilités : " + e.getMessage());
         }
@@ -229,7 +233,7 @@ public class GestionDisponibilite {
 
 
 //méthodes pour afficher la disponibilité du côté patient et médecin
-	public void consulterDispoParInfirmier(Medecin doc) {
+	public void consulterDispoParInfirmier(Utilisateur doc) {
 		System.out.println("Information du Médecin : ");
 		System.out.println(doc.getId() +"-/ Nom et prénom : "+ doc.getNom()+" "+ doc.getPrenom()+" Spécialité :"+ doc.getSpecialite());
 		System.out.println("Disponibilité :");
@@ -239,14 +243,16 @@ public class GestionDisponibilite {
 			String jour = Disponibilite.jourSelectionner(i);
 			List<LocalTime> heureJour = gest.trieHeuresEstLibre(i, doc.getId());
 			
-			if(!heureJour.isEmpty()) 
+			if(!heureJour.isEmpty()) {
 				System.out.println(jour+" : "+heureJour);
-		}System.out.println(" ");
-		
+			} else
+				System.out.println("Aucune Disponibilité enregistrée.");				
+		}
+		System.out.println(" ");	
 	}
-	public void consulterDispoParMedecin(Medecin doc) {
+	public void consulterDispoParMedecin(Utilisateur doc) {
 		System.out.println("---- Option en cours : Affichage des disponibilités enreistrées ----");
-		System.out.println("Disponibilité :");
+		System.out.println("Disponibilité enregistrée:");
         GestionDisponibilite gest = new GestionDisponibilite();
 		
 		for(int i=1; i<=7; i++) {
@@ -258,11 +264,11 @@ public class GestionDisponibilite {
 	}
 	
 	//méthode pour réserver une disponibilité
-	public void reserverDisponibilite(Medecin doc) {
-		System.out.println("Option en cours : Réservation d'une consultation");
+	public Disponibilite reserverDisponibilite(Utilisateur doc) {
 		
 		Scanner scanner = InputManager.getInstance().getScanner();
-		String repeter; boolean rester = true;
+		boolean rester = true;
+		Disponibilite laDispo = null;
 
 		do {	
 			//choix du Jour
@@ -277,14 +283,14 @@ public class GestionDisponibilite {
 	            if (scanner.hasNextInt()) {
 	                j = scanner.nextInt();
 	                verifJ = Disponibilite.verifierjour(j);
+	                InputManager.getInstance().clearBuffer();
 	            } else {
 	                scanner.next();
 	            }
 				if (!verifJ) {
 					System.out.println("Veuillez indiquer un Jour valide!! (1-7)");
 				}else {
-					InputManager.getInstance().clearBuffer();
-					
+									
 					//vérifie qu'une disponibilité existe au jour entré
 					if (!enregis) {		
 						GestionDisponibilite gestion = new GestionDisponibilite();
@@ -308,7 +314,7 @@ public class GestionDisponibilite {
 			String jour = Disponibilite.jourSelectionner(j);
 			
 			
-			String repeterH;
+			String repeterH ; boolean repet = false;
 			do {
 
 				System.out.println("Entrez l'heure à réserver.");
@@ -331,34 +337,35 @@ public class GestionDisponibilite {
 				boolean trouver = false;
 				
 				GestionDisponibilite gest = new GestionDisponibilite();
-				List<Disponibilite> toutesLesDisponibilite = gest.recupererAllDispo();
+				List<Disponibilite> toutesLesDisponibilite = gest.recupererAllDispo(doc.getId());
 
 				for (int i = 0; i < toutesLesDisponibilite.size(); i++) {
 	                Disponibilite dispo = toutesLesDisponibilite.get(i);
-	                if (doc.getId()==dispo.getIdMedecin() && j==dispo.getJour() && heure.equals(dispo.getHeure())) {
+	                if (j==dispo.getJour() && heure.equals(dispo.getHeure())) {
 						dispo.setEstlibre(false);
 						trouver = gest.modifierD(dispo);
 						System.out.println("Disponibilité réservée avec succès.");
+						laDispo = dispo;
 						break;
 					}
 				}
 				if(!trouver) {
 					System.out.println("Aucun enregistrement n'a été effectuer le "+jour+" à "+heure+".");
+					System.out.println("Voullez-vous réserver une autre heure le "+jour+"?");
+					System.out.print("Si oui entrer Y : ");
+					repeterH = scanner.nextLine();
+					repet = repeterH.equalsIgnoreCase("y");
 				}
 				
-				System.out.println("Voullez-vous réserver une autre heure le "+jour+"?");
-				System.out.print("Si oui entrer Y : ");
-				repeterH = scanner.nextLine();
-			}while(repeterH.equalsIgnoreCase("y"));
+				
+			}while(repet);
 			
-			System.out.println("Voullez-vous continuer la réservation?");
-			System.out.print("Si oui entrer Y : ");
-			repeter=scanner.nextLine();
-		}while(repeter.equalsIgnoreCase("y"));
+		}while(false);
+		return laDispo; 
 	}
 	
 	//méthodes pour supprimer des disponibilités
-	public void supprimerDisponibilite(Medecin doc) {
+	public void supprimerDisponibilite(Utilisateur doc) {
 		System.out.println("Option en cours : Suppression d'une disponibilité");
 		
 		Scanner scanner = InputManager.getInstance().getScanner();
@@ -432,12 +439,12 @@ public class GestionDisponibilite {
 					LocalTime heure = LocalTime.of(h,0);
 					boolean trouver = false;
 					GestionDisponibilite gestion = new GestionDisponibilite();
-					List<Disponibilite> toutesLesDisponibilites = gestion.recupererAllDispo();
+					List<Disponibilite> toutesLesDisponibilites = gestion.recupererAllDispo(doc.getId());
 					
 					// parcourir toutes les disponibilités et mettre la liste à jours après chaque suppression
 					for (int i = 0; i < toutesLesDisponibilites.size(); i++) {
 		                Disponibilite dispo = toutesLesDisponibilites.get(i);
-		                if (doc.getId()==dispo.getIdMedecin() && j==dispo.getJour() && heure.equals(dispo.getHeure())) {
+		                if (j==dispo.getJour() && heure.equals(dispo.getHeure())) {
 							gestion.supprimerD(dispo);
 							System.out.println("Disponibilité supprimée avec succès.");
 							trouver = true;
@@ -466,7 +473,7 @@ public class GestionDisponibilite {
 		}
 	
 	
-	public void ajouterDisponibilite(Medecin doc ) {
+	public void ajouterDisponibilite(Utilisateur doc ) {
 		System.out.println("Option en cours : Ajout d'une disponibilité");
 
 		Scanner scanner = InputManager.getInstance().getScanner();
@@ -515,12 +522,12 @@ public class GestionDisponibilite {
 					LocalTime heure = LocalTime.of(h,0);
 					boolean trouver = false;
 					GestionDisponibilite gestion = new GestionDisponibilite();
-					List<Disponibilite> toutesLesDisponibilites = gestion.recupererAllDispo();
+					List<Disponibilite> toutesLesDisponibilites = gestion.recupererAllDispo(doc.getId());
 					
 
 					for (int i = 0; i < toutesLesDisponibilites.size(); i++) {
 		                Disponibilite dispo = toutesLesDisponibilites.get(i);
-		                if (doc.getId()==dispo.getIdMedecin() && j==dispo.getJour() && heure.equals(dispo.getHeure())) {
+		                if (j==dispo.getJour() && heure.equals(dispo.getHeure())) {
 		                	System.out.println("enregistrement a déjà été effectuer le "+jour+" à "+heure+".");							
 							trouver = true;
 							break;

@@ -133,9 +133,5 @@ public class Utilisateur {
 	
 	//autres méthodes
 
-	
-
-	
-
 }
 
