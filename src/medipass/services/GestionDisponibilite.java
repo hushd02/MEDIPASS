@@ -252,7 +252,7 @@ public class GestionDisponibilite {
 	}
 	public void consulterDispoParMedecin(Utilisateur doc) {
 		System.out.println("---- Option en cours : Affichage des disponibilités enreistrées ----");
-		System.out.println("Disponibilité enregistrée:");
+		System.out.println("Disponibilité enregistrée par Jour :");
         GestionDisponibilite gest = new GestionDisponibilite();
 		
 		for(int i=1; i<=7; i++) {

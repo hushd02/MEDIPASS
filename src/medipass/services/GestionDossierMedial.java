@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import medipass.models.DossierMedical;
+import medipass.models.Utilisateur;
 import medipass.utils.ControleBD;
 
 public class GestionDossierMedial {
@@ -118,7 +119,15 @@ public class GestionDossierMedial {
         }
     }
 	
+	public void consulterDossier (DossierMedical dossier) {
+		
+			String s = Utilisateur.sexeChoisi(dossier.isSexe());
+			System.out.println("Option en cours : Afficher le Dossier Médical");
+			System.out.println("Patient n°"+dossier.getId()+" .Nom : "+dossier.getNom()+". Prenom : "+dossier.getPrenom());
+			System.out.println("Age : "+dossier.getAge()+"Ans; Sexe :"+s+". Groupe Sanguin :"+dossier.getGroupeSang());
+			System.out.println("Contacte : "+dossier.getNumTel()+". Email : "+dossier.getEmail());	
+	}
 	
-
+	
 	
 }

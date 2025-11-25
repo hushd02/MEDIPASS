@@ -132,6 +132,11 @@ public class Utilisateur {
 	
 	
 	//autres méthodes
-
+	public static String sexeChoisi(boolean sexe) {
+		if(sexe) {
+			return "Homme";
+		}else
+			return "Femme";
+	}
 }
 

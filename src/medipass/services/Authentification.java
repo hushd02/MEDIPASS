@@ -6,13 +6,6 @@ import medipass.models.Utilisateur;
 
 public class Authentification {
 	
-
-
-
-
-    // ===========================
-    //   AUTHENTICATION
-    // ===========================
     public Utilisateur connexion(String login, String password) {
 		GestionUtilisateur gest = new GestionUtilisateur();
 		List<Utilisateur> listeUser = gest.recupererAll();
