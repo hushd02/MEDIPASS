@@ -1,21 +1,45 @@
 package medipass.models;
 
-public class Pharmacien extends Utilisateur{
-	
+import java.time.LocalDate;
 
-	
-	//constructeur
-	public Pharmacien(int id, String nom, String prenom, String login, int age, boolean sexe,
-			long numTel, String email, String password, Role role, int nivAcces, long numOrdreP, Specialite spe) {
-		
-		super (id, nom, prenom, login, age, sexe, numTel, email, password, Role.PHARMACIEN, nivAcces, numOrdreP, spe);
+public class Pharmacien extends Utilisateur {
 
-	}
-	public Pharmacien(String nom, String prenom, String login, int age, boolean sexe,
-			long numTel, String email, String password, Role role, int nivAcces, long numOrdreP, Specialite spe) {
-		
-		super(nom, prenom, login, age, sexe, numTel, email, password, Role.PHARMACIEN, nivAcces, numOrdreP, spe);
+    private long numLicence;   // Numéro professionnel du pharmacien
 
-	}
-	
+    // --- Constructeur complet (avec id) ---
+    public Pharmacien(int id, String nom, String prenom, String login,
+                      boolean sexe, long numTel, String email,
+                      LocalDate dateNaissance, String password,
+                      int nivAcces, long numLicence) {
+
+    	super(id, nom, prenom, login, dateNaissance, sexe, numTel, email, password, Role.PHARMACIEN, nivAcces);
+
+        this.numLicence = numLicence;
+    }
+
+    // --- Constructeur sans id (id généré plus tard) ---
+    public Pharmacien(String nom, String prenom, String login,
+                      boolean sexe, long numTel, String email,
+                      LocalDate dateNaissance, String password,
+                      int nivAcces, long numLicence) {
+
+        super(nom, prenom, login, dateNaissance, sexe, numTel, email, password, Role.PHARMACIEN, nivAcces);
+
+        this.numLicence = numLicence;
+    }
+
+    // --- Getters & Setters ---
+    public long getNumLicence() {
+        return numLicence;
+    }
+
+    public void setNumLicence(long numLicence) {
+        this.numLicence = numLicence;
+    }
+
+    @Override
+    public String toString() {
+        return "Pharmacien : " + nom + " " + prenom +
+               " | Licence : " + numLicence;
+    }
 }

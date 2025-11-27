@@ -1,106 +1,78 @@
 package medipass.models;
 
+import java.time.LocalDate;
+
 public class DossierMedical {
 
-    // Attributs du dossier médical
-	private int id;
+    private String idDossier;   // Exemple : DOS001
     private String nom;
     private String prenom;
-    private int age;
+    private LocalDate dateNaissance;
     private boolean sexe;
-    private String email;
     private long numTel;
+    private String email;
     private String groupeSang;
     private String allergies;
-    
-    
-    public DossierMedical(int id, String nom, String prenom, int age,
-    		boolean sexe, long numTel, String email, String groupeSang, String allergies) {
-    	this.id = id;
-    	this.setNom(nom);
-    	this.setPrenom(prenom);
-    	this.setAge(age);
-    	this.setSexe(sexe); 
-    	this.setNumTel(numTel);   
-    	this.setEmail(email);
-    	this.setGroupeSang(groupeSang);
-    	this.setAllergies(allergies);
+
+    public DossierMedical(String idDossier, String nom, String prenom,
+                          LocalDate dateNaissance, boolean sexe,
+                          long numTel, String email,
+                          String groupeSang, String allergies) {
+
+        this.idDossier = idDossier;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.dateNaissance = dateNaissance;
+        this.sexe = sexe;
+        this.numTel = numTel;
+        this.email = email;
+        this.groupeSang = groupeSang;
+        this.allergies = allergies;
     }
-    
-    public DossierMedical(String nom, String prenom, int age,
-    		boolean sexe, long numTel, String email, String groupeSang, String allergies) {
-    	this.setNom(nom);
-    	this.setPrenom(prenom);
-    	this.setAge(age);
-    	this.setSexe(sexe);
-    	this.setNumTel(numTel);
-    	this.setEmail(email);
-    	this.setGroupeSang(groupeSang);
-    	this.setAllergies(allergies);
+
+    // GETTERS
+    public String getIdDossier() { return idDossier; }
+    public String getNom() { return nom; }
+    public String getPrenom() { return prenom; }
+    public LocalDate getDateNaissance() { return dateNaissance; }
+    public boolean isSexe() { return sexe; }
+    public long getNumTel() { return numTel; }
+    public String getEmail() { return email; }
+    public String getGroupeSang() { return groupeSang; }
+    public String getAllergies() { return allergies; }
+
+    // SETTERS
+    public void setIdDossier(String idDossier) { this.idDossier = idDossier; }
+
+;
+
+
+    @Override
+    public String toString() {
+        return "\n===== DOSSIER MÉDICAL =====" +
+               "\n ID Dossier : " + idDossier +
+               "\nNom : " + nom +
+               "\nPrénom : " + prenom +
+               "\nDâte de Naissance : " + dateNaissance +
+               "\nSexe : " + (sexe ? "Homme" : "Femme") +
+               "\nTéléphone : " + numTel +
+               "\nEmail : " + email +
+               "\nGroupe sanguin : " + groupeSang +
+               "\nAllergies : " + allergies;
     }
-    
-    
-    //getter
-	public int getId() {
-		return id;
-	}
-	public String getNom() {
-		return nom;
-	}
-	public String getPrenom() {
-		return prenom;
-	}
-	public int getAge() {
-		return age;
-	}
-	public boolean isSexe() {
-		return sexe;
-	}
-	public String getGroupeSang() {
-		return groupeSang;
-	}
-	public void setGroupeSang(String groupeSang) {
-		this.groupeSang = groupeSang;
-	}
-	public String getAllergies() {
-		return allergies;
-	}
-	
-	//setter
-	public void setId(int id) {
-		this.id = id;
-	}
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
-	public void setPrenom(String prenom) {
-		this.prenom = prenom;
-	}
-	public void setAge(int age) {
-		this.age = age;
-	}
-	public void setSexe(boolean sexe) {
-		this.sexe = sexe;
-	}
-	public void setAllergies(String allergies) {
-		this.allergies = allergies;
+
+	public void setAllergies(String allergies2) {
+		// TODO Auto-generated method stub
+		
 	}
 
-	public String getEmail() {
-		return email;
+	public void setEmail(String email2) {
+		// TODO Auto-generated method stub
+		
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setNumTel(long long1) {
+		// TODO Auto-generated method stub
+		
 	}
-
-	public long getNumTel() {
-		return numTel;
-	}
-
-	public void setNumTel(long numTel) {
-		this.numTel = numTel;
-	}
-
-
-}
+};

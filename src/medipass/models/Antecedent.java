@@ -3,90 +3,59 @@ package medipass.models;
 import java.time.LocalDate;
 
 public class Antecedent {
-	
-	// Attributs
-	
-	private int id;
-	private LocalDate date;
-	private String probleme;
-	private String description;
-	private String prescription;
-	private int idDossier;
 
-	// Constructeur
-	
-	public Antecedent( int id, LocalDate date, String probleme, String description, String prescription, int idDossier ) {
-		
-		    this.id = id;
-		    this.date = date;
-		    this.probleme = probleme;
-		    this.description = description;
-		    this.prescription = prescription;
-		    this.setIdDossier(idDossier);
-		}
-	
-	public Antecedent(LocalDate date, String probleme, String description, String prescription, int idDossier) {
+    private int id;
+    private LocalDate date;
+    private String probleme;
+    private String description;
+    private String prescription;
+    private int idPatient; // 🔥 Association directe à l'ID PATIENT
 
-	    this.date = date;
-	    this.probleme = probleme;
-	    this.description = description;
-	    this.prescription = prescription;
-	    this.setIdDossier(idDossier);
-	}
+    public Antecedent(int id, LocalDate date, String probleme, String description,
+                      String prescription, int idPatient) {
+        this.id = id;
+        this.date = date;
+        this.probleme = probleme;
+        this.description = description;
+        this.prescription = prescription;
+        this.idPatient = idPatient;
+    }
 
-    //getters
+    public Antecedent(LocalDate date, String probleme, String description,
+                      String prescription, int idPatient) {
+        this.date = date;
+        this.probleme = probleme;
+        this.description = description;
+        this.prescription = prescription;
+        this.idPatient = idPatient;
+    }
 
-	public int getId() { 
-		return id;
-		}
-	public int getIdDossier() {	
-		return idDossier;
-		}	
-	public LocalDate getDate() { 
-		return date; 
-		}
-	public String getProbleme() { 
-		return probleme;
-		}
-	public String getDescription() {
-		return description; 
-		}
-	public String getPrescription() { 
-		return prescription;
-		}
-	
-	//setter
-	public void setDate(LocalDate date) {
-		this.date = date; 
-		}
-	public void setProbleme(String probleme) {
-		this.probleme = probleme;
-		}
-	public void setDescription(String description) { 
-		this.description = description;
-		}	
-	public void setPrescription(String prescription) {
-		this.prescription = prescription; 
-		}
-	public void setIdDossier(int idDossier) {
-		this.idDossier = idDossier;	
-		}	
-	public void setId(int id) {
-		this.id = id;
-		}
-	
-	
+    // Getters & Setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-/*consulterAnte()
+    public LocalDate getDate() { return date; }
+    public void setDate(LocalDate date) { this.date = date; }
 
-Affiche les informations dans la console car le projet utilise un UI console.*/
-	
+    public String getProbleme() { return probleme; }
+    public void setProbleme(String probleme) { this.probleme = probleme; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public String getPrescription() { return prescription; }
+    public void setPrescription(String prescription) { this.prescription = prescription; }
+
+    public int getIdPatient() { return idPatient; }
+    public void setIdPatient(int idPatient) { this.idPatient = idPatient; }
 
 
-
-
-
-
-
-
+    public void consulterAntecedent() {
+        System.out.println("=== ANTÉCÉDENT MÉDICAL ===");
+        System.out.println("Date : " + date);
+        System.out.println("Problème : " + probleme);
+        System.out.println("Description : " + description);
+        System.out.println("Prescription : " + prescription);
+        System.out.println("------------------------------");
+    }
 }

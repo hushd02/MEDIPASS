@@ -1,5 +1,130 @@
 package medipass.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import medipass.models.DossierMedical;
+import medipass.models.Patient;
+import medipass.utils.Input;
+
+public class GestionDossierMedical {
+
+    private static List<DossierMedical> dossiers = new ArrayList<>();
+    private static int compteur = 1;  // Pour générer DOS001, DOS002...
+
+    // ============================
+    // GÉNÉRATION ID DOSSIER
+    // ============================
+    private String genererIdDossier() {
+        return String.format("DOS%03d", compteur++);
+    }
+
+    // ============================
+    // CRÉER UN DOSSIER MÉDICAL
+    // ============================
+    public DossierMedical creerDossierPourPatient(Patient p) {
+
+        String idDoc = genererIdDossier();
+
+        DossierMedical dossier = new DossierMedical(
+                idDoc,
+                p.getNom(),
+                p.getPrenom(),
+                p.getDate(),
+                p.getSexe(),
+                p.getNumTel(),
+                p.getEmail(),
+                p.getGroupeSang(),
+                p.getAllergies()
+        );
+
+        dossiers.add(dossier);
+
+        // Association au patient
+        p.setIdDossier(idDoc.hashCode()); // si tu veux garder int → sinon change int → String
+        // recommandation : modifie Patient : idDossier → String !!!
+
+        System.out.println("📁 Dossier médical créé avec ID : " + idDoc);
+        return dossier;
+    }
+
+    // ============================
+    // CONSULTER UN DOSSIER
+    // ============================
+    public void consulterDossier() {
+
+        String id = Input.readString("ID du dossier (ex: DOS001) : ");
+
+        DossierMedical d = chercherDossier(id);
+        if (d == null) {
+            System.out.println("❌ Dossier introuvable !");
+            return;
+        }
+
+        System.out.println(d);
+    }
+
+    // ============================
+    // MODIFIER UN DOSSIER
+    // ============================
+    public void modifierDossier() {
+
+        String id = Input.readString("ID du dossier à modifier : ");
+
+        DossierMedical d = chercherDossier(id);
+        if (d == null) {
+            System.out.println("❌ Aucun dossier trouvé.");
+            return;
+        }
+
+        System.out.println("Laisser vide pour ne rien changer.");
+
+        String tel = Input.readOptionalString("Téléphone (" + d.getNumTel() + ") : ");
+        if (tel != null) d.setNumTel(Long.parseLong(tel));
+
+        String email = Input.readOptionalString("Email (" + d.getEmail() + ") : ");
+        if (email != null) d.setEmail(email);
+
+        String allergies = Input.readOptionalString("Allergies (" + d.getAllergies() + ") : ");
+        if (allergies != null) d.setAllergies(allergies);
+
+        System.out.println("✔️ Dossier mis à jour.");
+    }
+
+    // ============================
+    // AFFICHER TOUS LES DOSSIERS
+    // ============================
+    public void afficherTous() {
+
+        if (dossiers.isEmpty()) {
+            System.out.println("Aucun dossier enregistré.");
+            return;
+        }
+
+        for (DossierMedical d : dossiers) {
+            System.out.println(d);
+            System.out.println("-----------------------------");
+        }
+    }
+
+    // ============================
+    // RECHERCHE
+    // ============================
+    public DossierMedical chercherDossier(String id) {
+        return dossiers.stream()
+                .filter(d -> d.getIdDossier().equalsIgnoreCase(id))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public List<DossierMedical> getTous() {
+        return dossiers;
+    }
+}
+
+
+/*package medipass.services;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -130,4 +255,4 @@ public class GestionDossierMedial {
 	
 	
 	
-}
+}*/

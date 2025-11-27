@@ -1,15 +1,15 @@
 package medipass.models;
 
 public enum Specialite {
-	GYNECOLOGUE(1),
-	GENERATILSTE(2),
-	DENTISTE(3),
-	NEUROLOGUE(4),
-	OPHTALMOLOGUE(5),
-	PEDIATRE(6),
-	SAGE_FEMME(7);
-	
-	private final int code;
+    GYNECOLOGUE(1),
+    GENERALISTE(2),
+    DENTISTE(3),
+    NEUROLOGUE(4),
+    OPHTALMOLOGUE(5),
+    PEDIATRE(6),
+    SAGE_FEMME(7);
+
+    private final int code;
 
     Specialite(int code) {
         this.code = code;
@@ -18,35 +18,47 @@ public enum Specialite {
     public int getCode() {
         return code;
     }
-    
-	public static boolean verifSpecialite(int spe) {
-		if (spe<1 || spe>7) {
-			return false;
-		}else
-			return true;
-	}
-    
-	public static Specialite choixSpecialite(int code) {
-	    // Parcourt toutes les constantes de l'énumération
-	    for (Specialite spe : Specialite.values()) {
-	        if (spe.getCode() == code) {
-	            return spe;
-	        }
-	    }
-	    return null;
-	}
-    
-	public static Specialite parse(String specialiteString) {
-        if (specialiteString == null || specialiteString.trim().isEmpty()) {
+
+    /**
+     * Vérifie si une spécialité existe pour un code donné.
+     */
+    public static boolean verifSpecialite(int code) {
+        return code >= 1 && code <= Specialite.values().length;
+    }
+
+    /**
+     * Retourne une spécialité à partir de son code numérique.
+     */
+    public static Specialite fromCode(int code) {
+        for (Specialite s : Specialite.values()) {
+            if (s.code == code) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Parse une chaîne en Specialite, en gestion d’erreur.
+     */
+    public static Specialite parse(String value) {
+        if (value == null || value.trim().isEmpty()) {
             return null;
         }
+
         try {
-            // Tentative de conversion en majuscules pour plus de robustesse
-            return Specialite.valueOf(specialiteString.toUpperCase().trim());
+            return Specialite.valueOf(value.trim().toUpperCase());
         } catch (IllegalArgumentException e) {
-            // La specialite lue dans la BD est invalide
-            System.err.println("Specialite invalide lu depuis la BD: " + specialiteString);
-            return null; 
+            System.err.println("Spécialité invalide : " + value);
+            return null;
         }
     }
+    public static void afficherSpecialites() {
+        System.out.println("\n===== LISTE DES SPÉCIALITÉS =====");
+        for (Specialite s : Specialite.values()) {
+            System.out.println(s.getCode() + " - " + s.name());
+        }
+        System.out.println("=================================\n");
+    }
+
 }

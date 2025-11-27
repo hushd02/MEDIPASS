@@ -3,103 +3,83 @@ package medipass.models;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-
 public class Consultation {
 
-	private int id;
-	private String motif;
-	private LocalDate date;
-	private LocalTime heure;
-	private String observation;
-	private String prescription;
-	private int idDossier;
-	private int idMedecin;
-	private int idDispo;
-	
-	
-	public Consultation(int id, String motif, LocalDate date, LocalTime heure, String observation,
-			String prescription, int idDossier, int idMedecin, int idDispo ) {
-		
-		this.setId(id);
-		this.setMotif(motif);
-		this.setDate(date);
-		this.setHeure(heure);
-		this.setObservation(observation);
-		this.setPrescription(prescription);
-		this.setIdDossier(idDossier);
-		this.setIdMedecin(idMedecin);
-		this.setIdDispo(idDispo);
-	}
-	
-	public Consultation(String motif, LocalDate date, LocalTime heure, String observation,
-			String prescription, int idDossier, int idMedecin, int idDispo ) {
-		
-		this.setMotif(motif);
-		this.setDate(date);
-		this.setHeure(heure);
-		this.setObservation(observation);
-		this.setPrescription(prescription);
-		this.setIdDossier(idDossier);
-		this.setIdMedecin(idMedecin);
-		this.setIdDispo(idDispo);
-	}
+    private int id;
+    private int idPatient;
+    private int idMedecin;
+    private String idDossier;
 
-	
-	//getter
-	public int getId() {
-		return id;
-	}
-	public String getMotif() {
-		return motif;
-	}
-	public LocalTime getHeure() {
-		return heure;
-	}
-	public LocalDate getDate() {
-		return date;
-	}
-	public String getObservation() {
-		return observation;
-	}
-	public String getPrescription() {
-		return prescription;
-	}
-	public int getIdDossier() {
-		return idDossier;
-	}
-	public int getIdMedecin() {
-		return idMedecin;
-	}
-	public int getIdDispo() {
-		return idDispo;
-	}
+    private LocalDate dateConsultation;
+    private LocalTime heureDebut;
+    private LocalTime heureFin;
 
-	//setter
-	public void setId(int id) {
-		this.id = id;
-	}
-	public void setMotif(String motif) {
-		this.motif = motif;
-	}
-	public void setHeure(LocalTime heure) {
-		this.heure = heure;
-	}
-	public void setDate(LocalDate date) {
-		this.date = date;
-	}
-	public void setObservation(String observation) {
-		this.observation = observation;
-	}
-	public void setPrescription(String prescription) {
-		this.prescription = prescription;
-	}
-	public void setIdDossier(int idDossier) {
-		this.idDossier = idDossier;
-	}
-	public void setIdMedecin(int idMedecin) {
-		this.idMedecin = idMedecin;
-	}	public void setIdDispo(int idDispo) {
-		this.idDispo = idDispo;
-	}
-	
+    private String observation;
+    private String prescription;
+
+    private boolean estTerminee;
+
+    // Constructeur complet
+    public Consultation(int id, int idPatient, int idMedecin, String idDossier,
+                        LocalDate date, LocalTime heureDebut, LocalTime heureFin,
+                        String observation, String prescription, boolean estTerminee) {
+
+        this.id = id;
+        this.idPatient = idPatient;
+        this.idMedecin = idMedecin;
+        this.idDossier = idDossier;
+        this.dateConsultation = date;
+        this.heureDebut = heureDebut;
+        this.heureFin = heureFin;
+        this.observation = observation;
+        this.prescription = prescription;
+        this.estTerminee = estTerminee;
+    }
+
+    // Constructeur sans ID
+    public Consultation(int idPatient, int idMedecin, String idDossier,
+                        LocalDate date, LocalTime heureDebut, LocalTime heureFin) {
+
+        this.idPatient = idPatient;
+        this.idMedecin = idMedecin;
+        this.idDossier = idDossier;
+        this.dateConsultation = date;
+        this.heureDebut = heureDebut;
+        this.heureFin = heureFin;
+        this.estTerminee = false;
+    }
+
+    // GETTERS & SETTERS
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
+    public int getIdPatient() { return idPatient; }
+    public int getIdMedecin() { return idMedecin; }
+    public String getIdDossier() { return idDossier; }
+
+    public LocalDate getDateConsultation() { return dateConsultation; }
+    public LocalTime getHeureDebut() { return heureDebut; }
+    public LocalTime getHeureFin() { return heureFin; }
+
+    public String getObservation() { return observation; }
+    public void setObservation(String observation) { this.observation = observation; }
+
+    public String getPrescription() { return prescription; }
+    public void setPrescription(String prescription) { this.prescription = prescription; }
+
+    public boolean isTerminee() { return estTerminee; }
+    public void setTerminee(boolean estTerminee) { this.estTerminee = estTerminee; }
+
+    @Override
+    public String toString() {
+        return "\n=== Consultation " + id + " ===" +
+               "\nPatient ID : " + idPatient +
+               "\nMédecin ID : " + idMedecin +
+               "\nDossier : " + idDossier +
+               "\nDate : " + dateConsultation +
+               "\nHeure : " + heureDebut + " - " + heureFin +
+               "\nObservation : " + (observation == null ? "Aucune" : observation) +
+               "\nPrescription : " + (prescription == null ? "Aucune" : prescription) +
+               "\nStatut : " + (estTerminee ? "Terminée" : "En attente");
+    }
 }

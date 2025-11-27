@@ -1,79 +1,50 @@
 package medipass.ui;
 
+import medipass.services.Authentification;
+import medipass.services.StatistiquesService;
 import medipass.utils.Input;
 
 public class AdminPanel {
 
+    private final Authentification userService = new Authentification();
+    private final StatistiquesService statsService = new StatistiquesService();
 
-
-    public void afficher() {
+    public void afficherMenuAdmin() {
 
         int choix;
 
         do {
-            System.out.println("\n==============================");
-            System.out.println("         MENU ADMIN");
-            System.out.println("==============================");
+            System.out.println("\n===== MENU ADMINISTRATEUR =====");
             System.out.println("1. Créer un compte utilisateur");
-            System.out.println("2. Afficher tous les utilisateurs");
+            System.out.println("2. Modifier les données d'un compte utilisateur");
+            System.out.println("3. Supprimer un utilisateur");
+            System.out.println("4. Afficher tous les utilisateurs");
+            System.out.println("5. Afficher les statistiques");
             System.out.println("0. Déconnexion");
-            System.out.println("------------------------------");
 
-            choix = lireChoix();
+            choix = Input.readInt("Choisissez une option : ");
 
             switch (choix) {
+            case 1 -> userService.creerUtilisateur();
+            case 2 -> userService.modifierUtilisateur();
+            case 3 -> userService.supprimerUtilisateur();
+            case 4 -> userService.afficherUtilisateurs();
+            case 5 -> afficherStatistiques();
+            case 0 -> System.out.println("Déconnexion…");
+            default -> System.out.println("Option invalide !");
+        }
 
-                case 1:
-                    menuCreationCompte();
-                    break;
-
-                case 2:
-                    break;
-
-                case 0:
-                    System.out.println(":::::: Déconnexion... :::::::");
-                    break;
-
-                default:
-                    System.out.println(" ?????? Choix invalide ! ??????");
-            }
 
         } while (choix != 0);
     }
 
-    private int lireChoix() {
-        try {
-            return Integer.parseInt(Input.read("Votre choix : "));
-        } catch (Exception e) {
-            return -1;
-        }
-    }
+    private void afficherStatistiques() {
+        System.out.println("\n===== STATISTIQUES =====");
 
-    private void menuCreationCompte() {
+        int nbPatients = statsService.compterPatients();
+        int nbConsultations = statsService.compterConsultations();
 
-        System.out.println("\n=== Création d'un compte ===");
-        System.out.println("1. Administrateur");
-        System.out.println("2. Médecin");
-        System.out.println("3. Infirmier");
-        System.out.println("4. Pharmacien");
-
-        int c = lireChoix();
-
-        switch (c) {
-            case 1:
-
-                break;
-            case 2:
-
-                break;
-            case 3:
-
-                break;
-            case 4:
-
-                break;
-            default:
-                System.out.println(" ?????? Choix invalide ! ??????");
-        }
+        System.out.println("📌 Nombre total de patients : " + nbPatients);
+        System.out.println("📌 Nombre total de consultations : " + nbConsultations);
     }
 }
