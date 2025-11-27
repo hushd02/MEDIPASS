@@ -31,9 +31,9 @@ public class GestionConsultation {
                 + "heure TEXTE NOT NULL,"
                 + "observation TEXT,"
                 + "prescrition TEXT,"
-                + "FOREIGN KEY(idDossier) REFERENCES DossierMedical(id),"
-                + "FOREIGN KEY(idMedecin) REFERENCES Disponibilite (idMedecin),"
-                + "FOREIGN KEY(idDispo) REFERENCES Disponibilite (id)"
+                + "idDossier INTEGER NOT NULL,"
+                + "idMedecin INTEGER NOT NULL,"
+                + "idDispo INTEGER NOT NULL"
                 + ");";
 
         try (Connection conn = ControleBD.getConnection(); // Ouvre la connexion à la BD

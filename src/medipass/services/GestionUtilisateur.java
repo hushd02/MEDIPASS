@@ -22,13 +22,12 @@ public class GestionUtilisateur {
                 + "nom TEXT NOT NULL,"
                 + "prenom TEXT NOT NULL,"
                 + "login TEXT UNIQUE NOT NULL,"
-                + "motDePasse TEXT UNIQUE NOT NULL,"
                 + "age INTEGER NOT NULL,"
                 + "sexe INTEGER NOT NULL,"
                 + "numTel TEXT NOT NULL,"
                 + "email TEXT UNIQUE NOT NULL,"
                 + "password TEXT NOT NULL,"
-                + "role TEXT NOT NUL,"
+                + "role TEXT NOT NULL,"
                 + "nivAcces INTEGER NOT NULL,"
                 + "numOrdre INTEGER UNIQUE,"
                 + "specialite TEXT"
@@ -47,7 +46,7 @@ public class GestionUtilisateur {
 	
 	public void inserer(Utilisateur user) {
         String sql = "INSERT INTO Utilisateur (nom, prenom, login, age, sexe, numTel,"
-        		+ " email, password, role,nivAcces, numOrdre, specialite) "
+        		+ " email, password, role, nivAcces, numOrdre, specialite) "
         		+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = ControleBD.getConnection(); // Récupère la connexion

@@ -22,7 +22,7 @@ public class GestionAntecedent {
                 + "probleme TEXT NOT NULL,"
                 + "description TEXT NOT NULL,"
                 + "prescrition TEXT,"
-                + "FOREIGN KEY(idDossier) REFERENCES DossierMedical(id)"
+                + "idDossier INTEGER NOT NULL"
                 + ");";
 
         try (Connection conn = ControleBD.getConnection(); // Ouvre la connexion à la BD

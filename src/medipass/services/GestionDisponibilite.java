@@ -24,7 +24,7 @@ public class GestionDisponibilite {
                 + "jour INTEGER NOT NULL,"
                 + "heure TEXT NOT NULL,"
                 + "estLibre INTEGER NOT NULL,"
-                + "FOREIGN KEY(idMedecin) REFERENCES Utilisateur(id)"
+                + "idMedecin INTEGER NOT NULL"
                 + ");";
         
         try (Connection conn = ControleBD.getConnection(); // 1. Ouvre la connexion à la BD
