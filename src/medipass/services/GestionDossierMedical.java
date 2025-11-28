@@ -1,3 +1,4 @@
+
 package medipass.services;
 
 import java.sql.Connection;
@@ -5,27 +6,26 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import medipass.models.DossierMedical;
+import medipass.models.Patient;
 import medipass.models.Utilisateur;
 import medipass.utils.ControleBD;
 
-public class GestionDossierMedial {
+public class GestionDossierMedical {
 
 	
 	public static void creerTable() {
         // C'est ici que vous placez la commande SQL
         String sql = "CREATE TABLE IF NOT EXISTS DossierMedical ("
-        		+ "id INTEGER PRIMARY KEY,"
-                + "nom TEXT NOT NULL,"
-                + "prenom TEXT NOT NULL,"
-                + "age INTEGER NOT NULL,"
+        		+ "id INTEGER PRIMARY KEY,"               
                 + "sexe INTEGER NOT NULL,"
-                + "numTel TEXT NOT NULL,"
-                + "email TEXT,"
+                + "dateNaissance NOT NULL,"
                 + "groupeSang TEXT,"
-                + "allergies TEXT"
+                + "allergies TEXT,"
+                + "idPatient INTEGER UNIQUE NOT NULL"
                 + ");";
 
         try (Connection conn = ControleBD.getConnection(); // Ouvre la connexion à la BD
@@ -40,22 +40,18 @@ public class GestionDossierMedial {
     }
 	
 	public void inserer(DossierMedical dossier) {
-        String sql = "INSERT INTO DossierMedical (nom, prenom, age, sexe, numTel,"
-        		+ " email, groupeSang, allergies) "
-        		+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO DossierMedical (sexe, dateNaissance,"
+        		+ " groupeSang, allergies, idPatient) "
+        		+ "VALUES(?, ?, ?, ?, ?)";
 
         try (Connection conn = ControleBD.getConnection(); // Récupère la connexion
         		PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
             
-
-            pstmt.setString(1, dossier.getNom());
-            pstmt.setString(2, dossier.getPrenom());
-            pstmt.setInt(3, dossier.getAge());
-            pstmt.setBoolean(4, dossier.isSexe());
-            pstmt.setLong(5, dossier.getNumTel());
-            pstmt.setString(6, dossier.getEmail());
-            pstmt.setString(7, dossier.getGroupeSang());
-            pstmt.setString(8, dossier.getAllergies());
+        	pstmt.setString(2, dossier.getDateNaissance().toString());
+        	pstmt.setBoolean(2, dossier.isSexe()); 
+            pstmt.setString(1, dossier.getGroupeSang());
+            pstmt.setString(2, dossier.getAllergies());
+            pstmt.setInt(2, dossier.getIdPatient()); 
 
             pstmt.executeUpdate();
             try (ResultSet rs = pstmt.getGeneratedKeys()) {
@@ -63,18 +59,19 @@ public class GestionDossierMedial {
                     dossier.setId(rs.getInt(1)); // Met à jour l'objet Java avec l'ID réel
                 }
             }
-            
-            System.out.println("Dossier Médical n°"+dossier.getId() +" ("+dossier.getNom()+" "+dossier.getPrenom()+") ennregistré.");
+            GestionPatient gestionP = new GestionPatient();
+            Patient p = gestionP.trouverPatient(dossier.getIdPatient());
+            System.out.println("Dossier Médical n°"+dossier.getId() +" ("+p.getNom()+" "+p.getPrenom()+") ennregistré.");
             
         } catch (SQLException e) {
-            System.err.println("Erreur lors de l'insertion de la disponibilité : " + e.getMessage());
+            System.err.println("Erreur lors de l'insertion dans la table DossierMedical : " + e.getMessage());
         }
     }
 	
 	public List<DossierMedical> recupererAll() {
         List<DossierMedical> allDossier = new ArrayList<>();
-        String sql = "SELECT id, nom, prenom, age, sexe,"
-        		+ " numTel, email, groupeSang, allergies FROM DossierMedical";
+        String sql = "SELECT id, dateNaissance, sexe,"
+        		+ "groupeSang, allergies, idPatient FROM DossierMedical";
 
         try (Connection conn = ControleBD.getConnection();
              Statement stmt = conn.createStatement();
@@ -83,20 +80,17 @@ public class GestionDossierMedial {
                // Crée un objet dossier à partir de chaque ligne du ResultSet
                 DossierMedical dossier = new DossierMedical(
                 		
-                    rs.getInt("id"),
-                    rs.getString("nom"),
-                    rs.getString("prenom"),
-                    rs.getInt("age"),
+                    rs.getInt("id"),               
                     rs.getBoolean("sexe"),
-                    rs.getLong("numTel"),
-                    rs.getString("email"),                   
+                    LocalDate.parse(rs.getString("dateNaissance")),                   
                     rs.getString("groupeSang"),
-                    rs.getString("allergies")         
+                    rs.getString("allergies"),
+                    rs.getInt("idPatient")
                 );
                 allDossier.add(dossier);
             }
         } catch (SQLException e) {
-            System.err.println("Erreur lors de la récupération des dossiers médicals : " + e.getMessage());
+            System.err.println("Erreur lors de la récupération des dossiers médicaux : " + e.getMessage());
         }
         return allDossier;
     }
@@ -112,7 +106,9 @@ public class GestionDossierMedial {
             int affectedRows = pstmt.executeUpdate();
             
             if (affectedRows > 0) {
-            	System.out.println("Dossier Médical n°"+dossier.getId()+" ("+dossier.getNom()+" "+dossier.getPrenom()+") supprimé.");
+    			GestionPatient gestionPat = new GestionPatient();
+    			Patient pat = gestionPat.trouverPatient(dossier.getIdPatient());
+            	System.out.println("Dossier Médical n°"+dossier.getId()+" ("+pat.getNom()+" "+pat.getPrenom()+") supprimé.");
             }
         } catch (SQLException e) {
             System.err.println("Erreur lors de la suppression : " + e.getMessage());
@@ -120,12 +116,14 @@ public class GestionDossierMedial {
     }
 	
 	public void consulterDossier (DossierMedical dossier) {
-		
+			GestionPatient gestionPat = new GestionPatient();
+			Patient pat = gestionPat.trouverPatient(dossier.getIdPatient());
 			String s = Utilisateur.sexeChoisi(dossier.isSexe());
+			
 			System.out.println("Option en cours : Afficher le Dossier Médical");
-			System.out.println("Patient n°"+dossier.getId()+" .Nom : "+dossier.getNom()+". Prenom : "+dossier.getPrenom());
-			System.out.println("Age : "+dossier.getAge()+"Ans; Sexe :"+s+". Groupe Sanguin :"+dossier.getGroupeSang());
-			System.out.println("Contacte : "+dossier.getNumTel()+". Email : "+dossier.getEmail());	
+			System.out.println("Patient n°"+dossier.getId()+" .Nom : "+pat.getNom()+". Prenom : "+pat.getPrenom());
+			System.out.println("Age : "+dossier.getDateNaissance()+"; Sexe :"+s+". Groupe Sanguin :"+dossier.getGroupeSang());
+			System.out.println("Contacte : "+pat.getNumTel()+". Email : "+pat.getEmail());	
 	}
 	
 	

@@ -1,12 +1,12 @@
 package medipass.models;
 
 public enum Role {
-	ADMIN(1), 
-	MEDECIN(2),
-	INFIRMIER(3),
-	PHARMACIEN(4);
-	
-	private final int code;
+    ADMIN(1), 
+    MEDECIN(2),
+    INFIRMIER(3),
+    PHARMACIEN(4);
+
+    private final int code;
 
     Role(int code) {
         this.code = code;
@@ -16,29 +16,32 @@ public enum Role {
         return code;
     }
 
-	public static Role choixRole(int code) {
-	    // Parcourt toutes les constantes de l'énumération
-	    for (Role role : Role.values()) {
-	        if (role.getCode() == code) {
-	            return role;
-	        }
-	    }
-	    return null;
-	}
-    
-
-	public static Role parse(String roleString) {
-        if (roleString == null || roleString.trim().isEmpty()) {
-            return null; // ou Role.INCONNU si vous avez une valeur par défaut
+    /**
+     * Retourne un rôle à partir de son code numérique.
+     * Renvoie null si aucun rôle ne correspond.
+     */
+    public static Role fromCode(int code) {
+        for (Role role : Role.values()) {
+            if (role.code == code) {
+                return role;
+            }
         }
+        return null;
+    }
+
+    /**
+     * Parse une chaîne de caractère en Role, en gérant les erreurs.
+     */
+    public static Role parse(String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
+
         try {
-            // Tentative de conversion en majuscules pour plus de robustesse
-            return Role.valueOf(roleString.toUpperCase().trim());
+            return Role.valueOf(value.trim().toUpperCase());
         } catch (IllegalArgumentException e) {
-            // Le rôle lu dans la BD est invalide
-            System.err.println("Rôle invalide lu depuis la BD: " + roleString);
-            return null; 
+            System.err.println("Rôle invalide: " + value);
+            return null;
         }
     }
-	
 }

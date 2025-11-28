@@ -3,7 +3,6 @@ package medipass.models;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-
 public class Consultation {
 
 	private int id;
@@ -101,5 +100,4 @@ public class Consultation {
 	}	public void setIdDispo(int idDispo) {
 		this.idDispo = idDispo;
 	}
-	
 }
