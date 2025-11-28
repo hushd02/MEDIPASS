@@ -47,11 +47,11 @@ public enum Specialite {
         }
     }
     public static void afficherSpecialites() {
-        System.out.println("\n===== LISTE DES SPÉCIALITÉS =====");
+        System.out.println("===== LISTE DES SPÉCIALITÉS =====");
         for (Specialite s : Specialite.values()) {
             System.out.println(s.getCode() + " - " + s.name());
         }
-        System.out.println("=================================\n");
+        System.out.println("=================================");
     }
 
 }

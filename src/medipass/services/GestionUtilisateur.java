@@ -240,4 +240,51 @@ public class GestionUtilisateur {
         }
     }
 
+	public boolean modifier(Utilisateur user) {
+
+		// L'ID (WHERE id = ?) est utilisé pour identifier l'enregistrement.
+		String sql = "UPDATE Utilisateur SET nom=?, prenom=?, login=?, dateNaissance=?, "
+				+ "sexe=?, numTel=?, email=?, password=?, role=?, nivAcces=?, numOrdre=?, specialite=? "
+				+ "WHERE id = ?";
+
+		try (Connection conn = ControleBD.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			pstmt.setString(1, user.getNom());			
+			pstmt.setString(2, user.getPrenom());
+			pstmt.setString(3, user.getLogin());
+			pstmt.setString(4, user.getDateNaissance().toString());
+			pstmt.setBoolean(5, user.isSexe());
+			pstmt.setLong(6, user.getNumTel());
+			pstmt.setString(7, user.getEmail());
+			pstmt.setString(8, user.getPassword());
+			pstmt.setString(9, user.getRole().toString());
+			pstmt.setInt(10, user.getNivAcces());
+			pstmt.setLong(11, user.getNumOrdre());
+			pstmt.setString(12, user.getSpecialite().toString());
+
+			pstmt.setInt(13, user.getId());
+
+			// 3. Exécution de la modification
+			int affectedRows = pstmt.executeUpdate();
+
+			return affectedRows > 0;
+
+		} catch (SQLException e) {
+			System.err.println(
+					"Erreur lors de la modification des données de l'utilisateur ID " + user.getId() + ": " + e.getMessage());
+			return false;
+		}
+	}
+    
+	public Utilisateur trouverUser(String login) {
+		GestionUtilisateur gest = new GestionUtilisateur();
+		List<Utilisateur> allUser = gest.recupererAll();
+		for(Utilisateur user : allUser) {
+			if(login==user.getLogin())
+				return user;
+		}
+		return null;
+	}
+    
 }

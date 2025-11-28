@@ -11,4 +11,16 @@ public class ControleBD {
 	        // Le pilote est chargé (ou pas) au moment où vous appelez cette méthode.
 	        return DriverManager.getConnection(URL);
 	    }
+
+	        public static void verifierConnexion() {
+	            try (Connection conn = getConnection()) {
+	                if (conn != null) {
+	                    System.out.println("✅ Connexion à la base de données établie avec succès.");
+	                }
+	            } catch (SQLException e) {
+	                System.err.println("❌ Erreur de connexion à la base de données: " + e.getMessage());
+	            }
+	        }
+	    
+	    
 }

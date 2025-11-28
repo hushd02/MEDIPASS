@@ -394,7 +394,7 @@ public class GestionConsultation {
 			System.out.println("Consulter la liste des prescriptions ");
 			System.out.println("Veuillez choisir une option");
 			System.out.println("1/afficher la dernière prescription. ");
-			System.out.println("2/afficher les desnières prescriptions. ");
+			System.out.println("2/afficher les dernières prescriptions. ");
 			System.out.println("3/afficher toutes les prescriptions.  ");
 			System.out.println("4/quitter l'option.");
 			choix = scanner.nextInt();
