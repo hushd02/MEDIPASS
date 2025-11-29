@@ -9,10 +9,12 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 import medipass.models.DossierMedical;
 import medipass.models.Patient;
 import medipass.models.Utilisateur;
 import medipass.utils.ControleBD;
+import medipass.utils.Input;
 
 public class GestionDossierMedical {
 
@@ -95,6 +97,33 @@ public class GestionDossierMedical {
         return allDossier;
     }
 	
+	public boolean modifier(DossierMedical dossier) {
+
+		// L'ID (WHERE id = ?) est utilisé pour identifier l'enregistrement.
+		String sql = "UPDATE DossierMedical SET dateNaissance=?,"
+				+ "groupeSang=?, allergies=? WHERE id = ?";
+
+		try (Connection conn = ControleBD.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			// 1. Définition des nouvelles valeurs (les 4 premiers paramètres)
+			pstmt.setString(1, dossier.getDateNaissance().toString());
+			pstmt.setString(3, dossier.getGroupeSang());
+			pstmt.setString(4, dossier.getAllergies());
+			pstmt.setInt(5, dossier.getId());
+
+			// 3. Exécution de la modification
+			int affectedRows = pstmt.executeUpdate();
+
+			return affectedRows > 0;
+
+		} catch (SQLException e) {
+			System.err.println(
+					"Erreur lors de la modification du dossier médical ID " + dossier.getId() + ": " + e.getMessage());
+			return false;
+		}
+	}
+	
 	public void supprimer(DossierMedical dossier) {
 
         String sql = "DELETE FROM DossierMedical WHERE id = ?";
@@ -115,16 +144,97 @@ public class GestionDossierMedical {
         }
     }
 	
-	public void consulterDossier (DossierMedical dossier) {
-			GestionPatient gestionPat = new GestionPatient();
-			Patient pat = gestionPat.trouverPatient(dossier.getIdPatient());
-			String s = Utilisateur.sexeChoisi(dossier.isSexe());
-			
-			System.out.println("Option en cours : Afficher le Dossier Médical");
-			System.out.println("Patient n°"+dossier.getId()+" .Nom : "+pat.getNom()+". Prenom : "+pat.getPrenom());
-			System.out.println("Age : "+dossier.getDateNaissance()+"; Sexe :"+s+". Groupe Sanguin :"+dossier.getGroupeSang());
-			System.out.println("Contacte : "+pat.getNumTel()+". Email : "+pat.getEmail());	
+	public DossierMedical trouverDossier(int idPatient) {
+		GestionDossierMedical gestionDM = new GestionDossierMedical();
+		List<DossierMedical> allDossier = gestionDM.recupererAll();
+		for(DossierMedical dossier : allDossier) {
+			if(idPatient==dossier.getIdPatient()) {
+				return dossier;
+			}
+		}
+		return null;
 	}
+	
+    public void modifierDossier(DossierMedical dossier) {
+        System.out.println("Option en cours : Modification d'un dossier Médical");
+        
+        
+        // --- Date de naissance ---
+        LocalDate date = Input.readOptionalDate("Nouvelle date de naissance (laisser vide pour ne pas changer) : ");
+        if (date != null) dossier.setDateNaissance(date);
+        
+        // --- Nom ---
+        String groupeSang = Input.readOptionalString("Nouveau Groupe Sanguin (laisser vide pour ne pas changer) : ");
+        if (!groupeSang.isEmpty()) dossier.setGroupeSang(groupeSang);
+
+        // --- Prénom ---
+        String allergies = Input.readOptionalString("Nouvelles allergies (laisser vide pour ne pas changer) : ");
+        if (!allergies.isEmpty()) dossier.setAllergies(allergies);
+
+        GestionDossierMedical gestion =new GestionDossierMedical();
+        boolean good = gestion.modifier(dossier);
+        if(good)
+        	System.out.println("Modification enregistrée avec succès");
+        
+    }
+	
+	public void consulterDossier (int nivAcces) {
+		System.out.println("Option en cours : Consulter un dossier Medecal");
+    	GestionPatient gestionP = new GestionPatient();
+    	GestionDossierMedical gestionDM = new GestionDossierMedical();
+    	GestionAntecedent gestionA = new GestionAntecedent();
+    	GestionConsultation gestionC = new GestionConsultation();
+    	
+    	Patient pati = gestionP.rechercherPatient();
+    	if(pati==null)
+    		return;
+    	int choixDossier = 4;
+    	
+		DossierMedical dossier = gestionDM.trouverDossier(pati.getId());
+		String s = Utilisateur.sexeChoisi(dossier.isSexe());
+		System.out.println("===================================================");
+		System.out.println("Option en cours : Afficher le Dossier Médical");
+		System.out.println("Patient n°"+dossier.getId()+" .Nom : "+pati.getNom()+". Prenom : "+pati.getPrenom());
+		System.out.println("Age : "+dossier.getDateNaissance()+"; Sexe :"+s+". Groupe Sanguin :"+dossier.getGroupeSang());
+		System.out.println("Contacte : "+pati.getNumTel()+". Email : "+pati.getEmail());
+		System.out.println("Allergies : "+dossier.getAllergies());
+		System.out.println("Contacte : "+pati.getNumTel()+". Email : "+pati.getEmail());
+		System.out.println("===================================================");
+		
+		do{
+		
+			System.out.println("Veuillez choisir une option");
+			System.out.println("1. Modifier le dossier médical");
+	        System.out.println("2. Afficher les antécedants");
+	        System.out.println("3. Afficher les consultations");
+	        System.out.println("0. Retour au menu");
+			
+	        choixDossier = Input.readInt("Votre choix : ");
+
+	        
+	        switch(choixDossier) {
+	        case 1 : {
+	        	if(nivAcces == 4) {
+	        		gestionDM.modifierDossier(dossier);
+	        	}else
+	        		System.out.println("Votre compte ne dispose pas du niveau d'accès nécessaire pour exécuter cette fonction");
+	        		System.out.println("Veuillez-vous rapprocher de l'administrateur pour le modifier");	        	
+	        }
+	        case 2 :
+	        	gestionA.consulterAnte(dossier.getId(), nivAcces);
+	        	
+	        case 3 :
+	        	if(nivAcces == 3) {
+	        		gestionC.afficherConsultationI(dossier.getId());
+	        	}else
+	        		System.out.println("Votre compte ne dispose pas du niveau d'accès nécessaire pour exécuter cette fonction");
+	        		System.out.println("Veuillez-vous rapprocher de l'administrateur pour le modifier");	  
+	        case 0 :System.out.println("Retour au menu…");	
+	        default : System.out.println("Option invalide !");
+	        }	
+		}while(choixDossier!=0);
+	}
+
 	
 	
 	

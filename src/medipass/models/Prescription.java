@@ -1,3 +1,4 @@
+/*
 package medipass.models;
 
 import java.time.LocalDate;
@@ -70,3 +71,4 @@ public class Prescription {
                "\nDélivrée : " + (estDelivree ? "Oui" : "Non");
     }
 }
+*/

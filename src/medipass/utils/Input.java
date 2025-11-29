@@ -37,7 +37,7 @@ public class Input {
             try {
                 return Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
-                System.out.println("❌ Veuillez entrer un nombre entier valide !");
+                System.out.println("❌ Veuillez entrer un nombre entier !");
             }
         }
     }

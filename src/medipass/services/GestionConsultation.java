@@ -201,7 +201,7 @@ public class GestionConsultation {
 				}
 			}
 		} catch (SQLException e) {
-			System.err.println("Erreur lors de la récupération des consultations  : " + e.getMessage());
+			System.err.println("Erreur lors de la récupération des prescriptions  : " + e.getMessage());
 		}
 		return consultationFiltre;
 	}
@@ -311,7 +311,7 @@ public class GestionConsultation {
 		} while (false);
 	}
 
-	public void afficherConsultationInfirmier(int idDossier) {
+	public void afficherConsultationI(int idDossier) {
 
 		boolean erreur = true;
 		int choix = 0;
@@ -390,7 +390,7 @@ public class GestionConsultation {
 		int choix = 0;
 
 		while (erreur) {
-			System.out.println(" ");
+			System.out.println("========================================");
 			System.out.println("Consulter la liste des prescriptions ");
 			System.out.println("Veuillez choisir une option");
 			System.out.println("1/afficher la dernière prescription. ");
@@ -465,7 +465,7 @@ public class GestionConsultation {
 		}
 	}
 
-	public void afficherConsultationMedecin(int idMedecin) {
+	public void afficherConsultationM(int idMedecin) {
 
 		boolean erreur = true;
 		int choix = 0;

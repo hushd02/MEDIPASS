@@ -20,6 +20,14 @@ public class DossierMedical {
         this.allergies = allergies;
         this.idPatient = idPatient;
     }
+    public DossierMedical( boolean sexe, LocalDate dateNaissance, String groupeSang, String allergies, int idPatient) {
+
+        this.sexe = sexe;
+        this.dateNaissance = dateNaissance; 
+        this.groupeSang = groupeSang;
+        this.allergies = allergies;
+        this.idPatient = idPatient;
+    }
 
     // GETTERS
     public int getId() { return id; }

@@ -53,7 +53,7 @@ public class GestionAdministrateur {
 	
     // Création d'utilisateur (admin)
     public Utilisateur creerUtilisateur() {
-        System.out.println("\n===== CRÉATION D’UN UTILISATEUR  =====");
+        System.out.println("===== CRÉATION D’UN UTILISATEUR  =====");
 
         String nom = Input.readNonEmptyString("Nom : ");
         String prenom = Input.readNonEmptyString("Prénom : ");
@@ -103,7 +103,7 @@ public class GestionAdministrateur {
                         Input.readDate("Date de naissance : "),
                         Input.readBooleanSexe("Sexe : "), // sexe
                         numtel, email,
-                        password, Role.MEDECIN, 3, numOrdre, spe
+                        password, Role.MEDECIN, 4, numOrdre, spe
                 );
                 return newUser;
             }
@@ -115,7 +115,7 @@ public class GestionAdministrateur {
                         Input.readDate("Date de naissance"),
                         Input.readBooleanSexe("Sexe"),
                         numtel, email,
-                        password, Role.INFIRMIER, 2, matricule, null
+                        password, Role.INFIRMIER, 3, matricule, null
                 );
             }
 
