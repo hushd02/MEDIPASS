@@ -25,7 +25,7 @@ public class GestionAntecedent {
                 + "date TEXT NOT NULL,"
                 + "probleme TEXT NOT NULL,"
                 + "description TEXT NOT NULL,"
-                + "prescrition TEXT,"
+                + "prescription TEXT NOT NULL,"
                 + "idDossier INTEGER NOT NULL"
                 + ");";
 

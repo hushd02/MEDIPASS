@@ -79,10 +79,10 @@ public class GestionUtilisateur {
             }
 
             System.out.println(
-                    "Compte" + user.getRole() + " : " + user.getNom() + " " + user.getPrenom() + " ennregistré.");
+                    "Compte " + user.getRole() + " : " + user.getNom() + " " + user.getPrenom() + " ennregistré.");
 
         } catch (SQLException e) {
-            System.err.println("Erreur lors de l'insertion de la disponibilité : " + e.getMessage());
+            System.err.println("Erreur lors de l'insertion de l'utilisateur : " + e.getMessage());
         }
     }
 
@@ -118,7 +118,7 @@ public class GestionUtilisateur {
                 allUtilisateur.add(user);
             }
         } catch (SQLException e) {
-            System.err.println("Erreur lors de la récupération des disponibilités : " + e.getMessage());
+            System.err.println("Erreur lors de la récupération des utilisateurs : " + e.getMessage());
         }
         return allUtilisateur;
     }
@@ -277,14 +277,52 @@ public class GestionUtilisateur {
 		}
 	}
     
-	public Utilisateur trouverUser(String login) {
-		GestionUtilisateur gest = new GestionUtilisateur();
-		List<Utilisateur> allUser = gest.recupererAll();
-		for(Utilisateur user : allUser) {
-			if(login==user.getLogin())
-				return user;
-		}
-		return null;
-	}
-    
+	public Utilisateur recupererParLogin(String login) {
+
+        Utilisateur usertrouver = null;
+
+        // La requête corrigée, sélectionnant les utilisateurs dont le rôle correspond
+        // au paramètre
+        String sql = "SELECT id, nom, prenom, login, dateNaissance, sexe, numTel, email, password, role, nivAcces, numOrdre, specialite"
+                + " FROM Utilisateur "
+                + " WHERE login = ? ";
+
+        try (Connection conn = ControleBD.getConnection();
+
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            // Définir le paramètre du rôle : conversion de l'Enum en String
+            pstmt.setString(1, login);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Role roleObj = Role.valueOf(rs.getString("role"));
+                    Specialite speObj = Specialite.valueOf(rs.getString("specialite"));
+
+                    Utilisateur user = new Utilisateur(
+
+                            rs.getInt("id"),
+                            rs.getString("nom"),
+                            rs.getString("prenom"),
+                            rs.getString("login"),
+                            LocalDate.parse(rs.getString("dateNaissance")),
+                            rs.getBoolean("sexe"),
+                            rs.getLong("numTel"),
+                            rs.getString("email"),
+                            rs.getString("password"),
+                            roleObj,
+                            rs.getInt("nivAcces"),
+                            rs.getLong("numOrdre"),
+                            speObj
+
+                    );
+                    usertrouver = user;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération par rôle : " + e.getMessage());
+        }
+        return usertrouver;
+    }
+
 }

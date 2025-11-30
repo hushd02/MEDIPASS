@@ -7,42 +7,45 @@ import medipass.services.GestionConsultation;
 import medipass.services.GestionDossierMedical;
 import medipass.services.GestionPatient;
 import medipass.utils.Input;
-import medipass.utils.InputManager;
 
 public class PharmacienMenu {
-	private PharmacienMenu pharmaMenu = new PharmacienMenu();
 
 
-    public void afficherMenu(Utilisateur user) {
+    public void afficherMenuPharma(Utilisateur user) {
 
-        int choixPharma;
+        int choixP;
 
         do {
-            System.out.println("===== MENU PHARMACIEN =====");
+            System.out.println("=================== MENU PHARMACIEN ===================");
             System.out.println("1. Consulter le dossier médical d'un patient");
             System.out.println("2. Afficher l'historique des prescriptions d'un patient");
             System.out.println("0. Déconnexion");
 
-            choixPharma = Input.readInt("Votre choix : ");
-
+            choixP = Input.readInt("Votre choix : ");
+            System.out.println("========================================================");
+            System.out.println(" ");
             
-            switch (choixPharma) {
+            switch (choixP) {
 
                 case 1 :
                 	GestionDossierMedical gestion = new GestionDossierMedical();
                 	gestion.consulterDossier(user.getNivAcces());
+                	break;
                 case 2 :
+                	PharmacienMenu pharmaMenu = new PharmacienMenu();
 	                pharmaMenu.afficherHistorique();
+	                break;
 
                 case 0 :
 	                System.out.println("Déconnexion...");
+	                break;
 
                 default : 
 	                System.out.println("❌ Choix invalide");
 	                break;
             }
 
-        } while (choixPharma != 0);
+        } while (choixP != 0);
     }
     
     public void afficherHistorique() {
@@ -55,12 +58,11 @@ public class PharmacienMenu {
     	boolean corr=false;boolean quiter = false;int idPatient = 0;
     	while(!corr) {
     	idPatient = Input.readInt("Veuillez entrer l'id du patient concerné.");
-    	InputManager.getInstance().clearBuffer();
     	
     	pati = gestionP.trouverPatient(idPatient);
     	if(pati==null) {
     		System.out.println("Aucun patient ne possède cet id.");
-    		quiter=Input.readYesNo("Vouller vous quiter cette option ? ");
+    		quiter=Input.readYesNo("Vouller vous quitter cette option ? ");
     	}else 
     		corr=true;
     	if(quiter)

@@ -15,9 +15,11 @@ import java.util.Scanner;
 import medipass.models.Consultation;
 import medipass.models.Disponibilite;
 import medipass.models.DossierMedical;
+import medipass.models.Patient;
 import medipass.models.Role;
 import medipass.models.Utilisateur;
 import medipass.utils.ControleBD;
+import medipass.utils.Input;
 import medipass.utils.InputManager;
 
 public class GestionConsultation {
@@ -243,9 +245,9 @@ public class GestionConsultation {
 		System.out.println("Option en cours : Programmation d'une consultation");
 		Scanner scanner = InputManager.getInstance().getScanner();
 
-		do {
-			System.out.println("Entrez le motif de votre consultation.");
-			String motif = scanner.nextLine();
+	
+			
+			String motif = Input.readOptionalString("Entrez le motif de votre consultation.");
 			GestionMedecin gestionM = new GestionMedecin();
 			GestionDisponibilite gestionD = new GestionDisponibilite();
 			GestionUtilisateur gestionU = new GestionUtilisateur();
@@ -261,12 +263,9 @@ public class GestionConsultation {
 			Utilisateur leDoc = null;
 			boolean quit = false;
 
-			System.out.print("Voullez-vous quitter cette option? (Entrez Y si oui) : ");
-			String retour = scanner.nextLine();
-			if (retour.equalsIgnoreCase("y"))
-				quit = true;
+			quit = Input.readYesNo("Voullez-vous quitter cette option? ");
 			if (quit)
-				break;
+				return;
 
 			while (!idCorrect) {
 				System.out.println("Veuillez indiquer l'id du médecin à consulter");
@@ -287,8 +286,8 @@ public class GestionConsultation {
 				int idMedecin = leDoc.getId();
 				int idDossier = dossier.getId();
 				int idDispo = dispo.getId();
-				String observation = null;
-				String prescription = null;
+				String observation = "";
+				String prescription = "";
 				LocalTime heure = dispo.getHeure();
 				LocalDate date = null;
 				LocalDate today = LocalDate.now();
@@ -308,7 +307,7 @@ public class GestionConsultation {
 				gestionC.inserer(consul);
 			}
 
-		} while (false);
+	
 	}
 
 	public void afficherConsultationI(int idDossier) {
@@ -646,5 +645,45 @@ public class GestionConsultation {
 			System.out.println(" ");
 		} while (repeter);
 	}
+	
+	public Consultation trouverConsultation(Utilisateur user) {
+		System.out.println("Option en cours : Trouver une consultation");
+		GestionPatient gestionP = new GestionPatient();
+		GestionConsultation gestionC = new GestionConsultation();
+		GestionDossierMedical gestionDM = new GestionDossierMedical();
+		Patient pat = gestionP.rechercherPatient();
+		DossierMedical dos = gestionDM.trouverDossier(pat.getId());
+		LocalDate date = Input.readOptionalDate("Veuillez entrer la date exacte de la consultation : ");
+		
+		boolean consulTrouver = false;
+		List<Consultation> allConsul = gestionC.recupererParMedecin(user.getId());
+		for(Consultation consul : allConsul) {
+			if(dos.getId()==consul.getIdDossier() && date.compareTo(consul.getDate())==0 ) {
+				System.out.println("=======================================================");
+				System.out.println("Consultation numéro n°"+consul.getId()+"; programmer le "+consul.getDate()+" à "+consul.getHeure());
+				System.out.println("=======================================================");
+				consulTrouver=true;
+			}
+		}
+		if(consulTrouver) {
+			while(true) {
+				int idConsul = Input.readInt("Veuillez indiquer l'id de la consultation recherchée : ");
+				for(Consultation consul : allConsul) {
+					if(consul.getId()==idConsul)
+						return consul;
+				}
+				System.out.println("Id introuvable, veuillez revérifier!!");
+				boolean quiter = Input.readYesNo("Voullez-vous quitter cette option ? ");
+				if(quiter)
+					return null;
+			}
+		}else
+			return null;
 
+	
+		
+		
+		
+	}
+	
 }

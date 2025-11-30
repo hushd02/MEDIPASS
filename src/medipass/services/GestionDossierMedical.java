@@ -21,10 +21,10 @@ public class GestionDossierMedical {
 	
 	public static void creerTable() {
         // C'est ici que vous placez la commande SQL
-        String sql = "CREATE TABLE IF NOT EXISTS DossierMedical ("
+        String sql = "CREATE TABLE IF NOT EXISTS DossierMedica ("
         		+ "id INTEGER PRIMARY KEY,"               
                 + "sexe INTEGER NOT NULL,"
-                + "dateNaissance NOT NULL,"
+                + "dateNaissance TEXT NOT NULL,"
                 + "groupeSang TEXT,"
                 + "allergies TEXT,"
                 + "idPatient INTEGER UNIQUE NOT NULL"
@@ -34,7 +34,7 @@ public class GestionDossierMedical {
              Statement stmt = conn.createStatement()) {  
             
             stmt.execute(sql);
-            System.out.println("La table 'DossierMedical' est prête ");
+            System.out.println("La table 'DossierMedica' est prête ");
             
         } catch (SQLException e) {
             System.err.println("Erreur lors de la création de la table : " + e.getMessage());
@@ -42,18 +42,19 @@ public class GestionDossierMedical {
     }
 	
 	public void inserer(DossierMedical dossier) {
-        String sql = "INSERT INTO DossierMedical (sexe, dateNaissance,"
+        String sql = "INSERT INTO DossierMedica (sexe, dateNaissance,"
         		+ " groupeSang, allergies, idPatient) "
         		+ "VALUES(?, ?, ?, ?, ?)";
 
         try (Connection conn = ControleBD.getConnection(); // Récupère la connexion
         		PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
             
+        	
+        	pstmt.setBoolean(1, dossier.isSexe()); 
         	pstmt.setString(2, dossier.getDateNaissance().toString());
-        	pstmt.setBoolean(2, dossier.isSexe()); 
-            pstmt.setString(1, dossier.getGroupeSang());
-            pstmt.setString(2, dossier.getAllergies());
-            pstmt.setInt(2, dossier.getIdPatient()); 
+            pstmt.setString(3, dossier.getGroupeSang());
+            pstmt.setString(4, dossier.getAllergies());
+            pstmt.setInt(5, dossier.getIdPatient()); 
 
             pstmt.executeUpdate();
             try (ResultSet rs = pstmt.getGeneratedKeys()) {
@@ -72,8 +73,8 @@ public class GestionDossierMedical {
 	
 	public List<DossierMedical> recupererAll() {
         List<DossierMedical> allDossier = new ArrayList<>();
-        String sql = "SELECT id, dateNaissance, sexe,"
-        		+ "groupeSang, allergies, idPatient FROM DossierMedical";
+        String sql = "SELECT id, sexe, dateNaissance, "
+        		+ "groupeSang, allergies, idPatient FROM DossierMedica";
 
         try (Connection conn = ControleBD.getConnection();
              Statement stmt = conn.createStatement();
@@ -100,7 +101,7 @@ public class GestionDossierMedical {
 	public boolean modifier(DossierMedical dossier) {
 
 		// L'ID (WHERE id = ?) est utilisé pour identifier l'enregistrement.
-		String sql = "UPDATE DossierMedical SET dateNaissance=?,"
+		String sql = "UPDATE DossierMedica SET dateNaissance=?,"
 				+ "groupeSang=?, allergies=? WHERE id = ?";
 
 		try (Connection conn = ControleBD.getConnection();
@@ -108,9 +109,9 @@ public class GestionDossierMedical {
 
 			// 1. Définition des nouvelles valeurs (les 4 premiers paramètres)
 			pstmt.setString(1, dossier.getDateNaissance().toString());
-			pstmt.setString(3, dossier.getGroupeSang());
-			pstmt.setString(4, dossier.getAllergies());
-			pstmt.setInt(5, dossier.getId());
+			pstmt.setString(2, dossier.getGroupeSang());
+			pstmt.setString(3, dossier.getAllergies());
+			pstmt.setInt(4, dossier.getId());
 
 			// 3. Exécution de la modification
 			int affectedRows = pstmt.executeUpdate();
@@ -126,7 +127,7 @@ public class GestionDossierMedical {
 	
 	public void supprimer(DossierMedical dossier) {
 
-        String sql = "DELETE FROM DossierMedical WHERE id = ?";
+        String sql = "DELETE FROM DossierMedica WHERE id = ?";
 
         try (Connection conn = ControleBD.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -216,21 +217,25 @@ public class GestionDossierMedical {
 	        case 1 : {
 	        	if(nivAcces == 4) {
 	        		gestionDM.modifierDossier(dossier);
+	        		break;
 	        	}else
 	        		System.out.println("Votre compte ne dispose pas du niveau d'accès nécessaire pour exécuter cette fonction");
-	        		System.out.println("Veuillez-vous rapprocher de l'administrateur pour le modifier");	        	
+	        		System.out.println("Veuillez-vous rapprocher de l'administrateur pour le modifier");
+	        		break;
 	        }
 	        case 2 :
 	        	gestionA.consulterAnte(dossier.getId(), nivAcces);
-	        	
+	        	break;
 	        case 3 :
 	        	if(nivAcces == 3) {
 	        		gestionC.afficherConsultationI(dossier.getId());
+	        		break;
 	        	}else
 	        		System.out.println("Votre compte ne dispose pas du niveau d'accès nécessaire pour exécuter cette fonction");
-	        		System.out.println("Veuillez-vous rapprocher de l'administrateur pour le modifier");	  
-	        case 0 :System.out.println("Retour au menu…");	
-	        default : System.out.println("Option invalide !");
+	        		System.out.println("Veuillez-vous rapprocher de l'administrateur pour le modifier");	
+	        		break;
+	        case 0 :System.out.println("Retour au menu…");break;
+	        default : System.out.println("Option invalide !");break;
 	        }	
 		}while(choixDossier!=0);
 	}

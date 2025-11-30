@@ -11,10 +11,8 @@ import java.util.List;
 
 import medipass.models.DossierMedical;
 import medipass.models.Patient;
-import medipass.models.Utilisateur;
 import medipass.utils.ControleBD;
 import medipass.utils.Input;
-import medipass.utils.InputManager;
 
 public class GestionPatient {
 
@@ -25,7 +23,7 @@ public class GestionPatient {
                 + "nom TEXT NOT NULL,"
                 + "prenom TEXT NOT NULL,"
                 + "numTel TEXT NOT NULL,"
-                + "email TEXT,"
+                + "email TEXT"
                 + ");";
 
         try (Connection conn = ControleBD.getConnection(); // Ouvre la connexion à la BD
@@ -40,8 +38,8 @@ public class GestionPatient {
     }
 
     public void inserer(Patient pat) {
-        String sql = "INSERT INTO Utilisateur (nom, prenom, numTel, email)"
-        		+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Patient (nom, prenom, numTel, email)"
+        		+ "VALUES(?, ?, ?, ?)";
 
 
         try (Connection conn = ControleBD.getConnection(); // Récupère la connexion
@@ -49,8 +47,8 @@ public class GestionPatient {
 
             pstmt.setString(1, pat.getNom());
             pstmt.setString(2, pat.getPrenom());
-            pstmt.setLong(6, pat.getNumTel());
-            pstmt.setString(7, pat.getEmail());
+            pstmt.setLong(3, pat.getNumTel());
+            pstmt.setString(4, pat.getEmail());
             
             pstmt.executeUpdate();
 
@@ -70,7 +68,7 @@ public class GestionPatient {
 
     public List<Patient> recupererAll() {
         List<Patient> allPatient = new ArrayList<>();
-        String sql = "SELECT id, nom, prenom, numTel, email FROM Patient"
+        String sql = "SELECT id, nom, prenom, numTel, email FROM Patient "
         		+ "ORDER BY id ASC";
 
         try (Connection conn = ControleBD.getConnection();
@@ -108,19 +106,19 @@ public class GestionPatient {
     	return null;
     }
 
-    public void supprimer(Utilisateur user) {
+    public void supprimer(Patient pat) {
 
-        String sql = "DELETE FROM Utilisateur WHERE id = ?";
+        String sql = "DELETE FROM Patient WHERE id = ?";
 
         try (Connection conn = ControleBD.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setInt(1, user.getId());
+            pstmt.setInt(1, pat.getId());
             int affectedRows = pstmt.executeUpdate();
 
             if (affectedRows > 0) {
                 System.out.println(
-                        "Compte " + user.getRole() + " (" + user.getNom() + " " + user.getPrenom() + ") supprimé.");
+                        "Compte Patient (" + pat.getNom() + " " + pat.getPrenom() + ") supprimé.");
             }
         } catch (SQLException e) {
             System.err.println("Erreur lors de la suppression : " + e.getMessage());
@@ -160,49 +158,58 @@ public class GestionPatient {
     	 System.out.println("Option en cours : Création d'un compte patient");
     	 String nom = Input.readNonEmptyString("Nom : ");
          String prenom = Input.readNonEmptyString("Prénom : ");
-         String email = Input.readNonEmptyString("Email : ");
+         String email = Input.readOptionalString("Email ");
          long numTel = Input.readLong("Numéro de téléphone : ");
          LocalDate dateNaissance = Input.readDate("Date de naissance");
          boolean sexe = Input.readBooleanSexe("Sexe");
+         if(email==null)
+    		 email="";
     	 System.out.println(" ");
     	 
     	 boolean rester = true;
     	 rester = Input.readYesNo("Voullez-vous finaliser l'enregistrement de ce patient?");
     	 if(!rester)
     		 return;
-    		 
+    	 
          GestionPatient gestionP = new GestionPatient();
     	 GestionDossierMedical gestionDM = new GestionDossierMedical();
   
     	 Patient newPatient = new Patient(nom, prenom, numTel, email);
-         gestionP.inserer(newPatient);
-         
-         List<Patient> allPatient = gestionP.recupererAll();
-         int last = allPatient.size()-1; 
-         newPatient = allPatient.get(last);
-         
-         DossierMedical newDossier = new DossierMedical(sexe, dateNaissance, null, null, newPatient.getId());
-         gestionDM.inserer(newDossier);
+
+    	 try {// 1. Insertion du patient 
+    	     gestionP.inserer(newPatient);
+    	      
+    	     
+    	     // Si l'insertion échoue, le code s'arrête ici et passe au catch.
+    	     
+    	     // 2. Si insertion Patient réussie, on insère le Dossier
+    	     DossierMedical newDossier = new DossierMedical(sexe, dateNaissance, "", "", newPatient.getId());
+    	     gestionDM.inserer(newDossier);
+    	     
+    	     System.out.println("✅ Patient " + newPatient.getNom() + " enregistré avec succès (ID: " + newPatient.getId() + ").");
+    	     
+    	 } catch (RuntimeException e) {
+    	     System.err.println("❌ Erreur d'enregistrement: " + e.getMessage());
+    	 }
     }   
     
     public Patient rechercherPatient() {
-    	System.out.println("Option en cours : Afficher tout les patients");
+    	System.out.println("Option en cours : Rechercher votre patient");
     	
     	GestionPatient gestionP = new GestionPatient();
     	boolean corr = false; boolean quiter=false;
     	int idPatient = 0; Patient pati = null;
     	while(!corr) {
-        	idPatient = Input.readInt("Veuillez entrer l'id du patient concerné.");
-        	InputManager.getInstance().clearBuffer();
+        	idPatient = Input.readInt("Veuillez entrer l'id du patient concerné. : ");
         	
         	pati = gestionP.trouverPatient(idPatient);
         	if(pati==null) {
         		System.out.println("Aucun patient ne possède cet id.");
         		quiter=Input.readYesNo("Vouller vous quitter cette option ? ");
+        		if(quiter)
+        			return null;
         	}else 
         		corr=true;
-        	if(quiter)
-        		return null;
         	}
 
     		System.out.println("=================================================");
@@ -217,6 +224,7 @@ public class GestionPatient {
     	System.out.println("Option en cours : modification d'un compte patient");
     	GestionPatient gestion = new GestionPatient();
     	Patient pati = gestion.rechercherPatient();
+    	 System.out.println(" ");
     	if(pati==null)
     		return ;
     	 // --- Nom ---
@@ -241,6 +249,31 @@ public class GestionPatient {
         	System.out.println("Modification enregistrée avec succès");
     }
 
-
+    public void supprimerPatient() {
+    	GestionPatient gestionP = new GestionPatient();
+    	GestionDossierMedical gestionDM = new GestionDossierMedical(); 
+    	Patient pat = gestionP.rechercherPatient();
+    	 System.out.println(" ");
+    	boolean sup; 
+    	if (pat==null) {
+    		return;
+    	}else
+    		sup =Input.readYesNo("Voullez-vous supprimer ce patient ainsi que son dossier médical? :");
+    	 System.out.println(" ");
+    	if(sup) {
+    		DossierMedical dossierP = gestionDM.trouverDossier(pat.getId());
+    		
+    		if(dossierP!=null) {
+    			gestionDM.supprimer(dossierP);
+    		}else
+    			System.out.println("Aucun dossier médical n'est associé à ce patient");
+    		
+    		gestionP.supprimer(pat);
+    		
+    	}else 
+    		return;
+    		
+    }
+   
     
 }

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import medipass.models.Administrateur;
+import medipass.models.Infirmier;
 import medipass.models.Medecin;
 import medipass.models.Patient;
 import medipass.models.Pharmacien;
@@ -52,7 +53,7 @@ public class GestionAdministrateur {
 	}
 	
     // Création d'utilisateur (admin)
-    public Utilisateur creerUtilisateur() {
+    public void creerUtilisateur() {
         System.out.println("===== CRÉATION D’UN UTILISATEUR  =====");
 
         String nom = Input.readNonEmptyString("Nom : ");
@@ -75,7 +76,7 @@ public class GestionAdministrateur {
 	        if (role == null) {
 	            quiter = Input.readYesNo("Rôle invalide! Voullez-vous réessayer ? ");
 	            if(!quiter)
-	            	return null;
+	            	return ;
 	        }else {
 	        	roleJuste = true;
 	        }
@@ -89,14 +90,14 @@ public class GestionAdministrateur {
                 Specialite spe = null ;
 		        while(!juste) {    
 		        	// Affichage des spécialités
-		            System.out.println();
+		            System.out.println(" ");
 		            Specialite.afficherSpecialites();
 		            int codeSpe = Input.readInt("Veuillez indiquer la Spécialite (1 à "+Specialite.values().length+") : ");
 		            spe = Specialite.fromCode(codeSpe);
 		            if (spe == null) {
 		                System.out.println("❌ Spécialité invalide !");
-		                return null;
-		            }
+		            }else
+		            	juste=true;
 		        }
                 newUser = new Medecin(
                         nom, prenom, login,
@@ -105,17 +106,16 @@ public class GestionAdministrateur {
                         numtel, email,
                         password, Role.MEDECIN, 4, numOrdre, spe
                 );
-                return newUser;
             }
             case INFIRMIER -> {
             	
                 long matricule = Input.readLong("Matricule : ");
-                newUser = new Pharmacien(
+                newUser = new Infirmier(
                         nom, prenom, login,
                         Input.readDate("Date de naissance"),
                         Input.readBooleanSexe("Sexe"),
                         numtel, email,
-                        password, Role.INFIRMIER, 3, matricule, null
+                        password, Role.INFIRMIER, 3, matricule, Specialite.AUCUNE
                 );
             }
 
@@ -127,7 +127,7 @@ public class GestionAdministrateur {
                         Input.readBooleanSexe("Sexe"),
                         numtel, email,
                         
-                        password, Role.PHARMACIEN, 2, licence, null
+                        password, Role.PHARMACIEN, 2, licence, Specialite.AUCUNE
                 );
             }
 
@@ -136,7 +136,7 @@ public class GestionAdministrateur {
                         nom, prenom, login,
                         Input.readDate("Date de naissance"),
                         Input.readBooleanSexe("Sexe"),
-                        numtel, email, password, Role.ADMIN, 1, 0, null
+                        numtel, email, password, Role.ADMIN, 1, 0, Specialite.AUCUNE
                 );
             }
         }
@@ -146,7 +146,7 @@ public class GestionAdministrateur {
             gestion.inserer(newUser);
             System.out.println("✔ Utilisateur créé avec succès !");
         }
-        return newUser;
+       
     }
     
     public void afficherUtilisateur() {
@@ -172,7 +172,7 @@ public class GestionAdministrateur {
 		System.out.println("Option en cours : Recherche d'un Utilisateur");
 		String login = Input.readString("Entrez le login de l'utilisateur à rechercher : ");
 		GestionUtilisateur gestionU = new GestionUtilisateur();
-		Utilisateur user = gestionU.trouverUser(login);
+		Utilisateur user = gestionU.recupererParLogin(login);
 		
 		if(user==null) {
 			System.out.println("Utilisateur introuvable!! veuillez vérifier votre login ou procéder à la création de ce compte");
@@ -200,7 +200,7 @@ public class GestionAdministrateur {
         String login = Input.readString("Entrez le login de l'utilisateur à supprimer : ");
 
         GestionUtilisateur gestionU = new GestionUtilisateur();
-		Utilisateur user = gestionU.trouverUser(login);
+		Utilisateur user = gestionU.recupererParLogin(login);
 
         if (user == null) {
             System.out.println("⚠️ Aucun utilisateur trouvé avec ce login.");
@@ -225,7 +225,7 @@ public class GestionAdministrateur {
 
         String login = Input.readString("Entrez le login de l'utilisateur à modifier : ");
         GestionUtilisateur gestionU = new GestionUtilisateur();
-		Utilisateur user = gestionU.trouverUser(login);
+		Utilisateur user = gestionU.recupererParLogin(login);
 
         if (user == null) {
             System.out.println("⚠️ Aucun utilisateur trouvé avec ce login.");
@@ -236,15 +236,15 @@ public class GestionAdministrateur {
 
         // --- Nom ---
         String nom = Input.readOptionalString("Nouveau nom (laisser vide pour ne pas changer) : ");
-        if (!nom.isEmpty()) user.setNom(nom);
+        if (nom != null && !nom.isEmpty()) user.setNom(nom);
 
         // --- Prénom ---
         String prenom = Input.readOptionalString("Nouveau prénom (laisser vide pour ne pas changer) : ");
-        if (!prenom.isEmpty()) user.setPrenom(prenom);
+        if (prenom!=null && !prenom.isEmpty()) user.setPrenom(prenom);
 
         // --- Email ---
         String email = Input.readOptionalString("Nouvel email (laisser vide pour ne pas changer) : ");
-        if (!email.isEmpty()) user.setEmail(email);
+        if (email!=null && !email.isEmpty()) user.setEmail(email);
 
         // --- Numéro de téléphone ---
         Long tel = Input.readOptionalLong("Nouveau numéro de téléphone (laisser vide pour ne pas changer) : ");
@@ -252,15 +252,15 @@ public class GestionAdministrateur {
 
         // --- Mot de passe ---
         String mdp = Input.readOptionalString("Nouveau mot de passe (laisser vide pour ne pas changer) : ");
-        if (!mdp.isEmpty()) user.setPassword(mdp);
+        if (mdp!=null && !mdp.isEmpty()) user.setPassword(mdp);
 
         // --- Date de naissance ---
         LocalDate date = Input.readOptionalDate("Nouvelle date de naissance (laisser vide pour ne pas changer) : ");
         if (date != null) user.setDateNaissance(date);
         
         // niveau d'accès
-        int nivAcces = Input.readInt("Nouveau niveau d'accès aux dossiers médicaux (laisser vide pour ne pas changer) : ");
-        user.setNivAcces(nivAcces);
+        int nivAcces = Input.readInt("Nouveau niveau d'accès aux dossiers médicaux (Entrer 0 pour ne pas changer) : ");
+        if (nivAcces!=0) user.setNivAcces(nivAcces);
         
         boolean good = gestionU.modifier(user);
         if(good)

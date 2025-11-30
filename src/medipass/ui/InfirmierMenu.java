@@ -21,19 +21,23 @@ public class InfirmierMenu {
     }
 
     public void afficherMenu(Utilisateur user) {
-        int choix;
+        int choixI;
 
         do {
-            System.out.println("===== MENU INFIRMIER =====");
+        	System.out.println(" ");
+            System.out.println("================ MENU INFIRMIER ==============");
             System.out.println("1. Ajouter un patient");
             System.out.println("2. Rechercher un patient");
-            System.out.println("3. Modifier un patient");           
-            System.out.println("4. Afficher les consultations d'un patient ");	
-            System.out.println("5. Consulter un dossier médical patient");
+            System.out.println("3. Modifier un patient");
+            System.out.println("4. Supprimer un patient");
+            System.out.println("5. Afficher les consultations d'un patient ");
+            System.out.println("6. Programmer une consultation");	
+            System.out.println("7. Consulter un dossier médical patient");
             System.out.println("0. Déconnexion");
-            choix = Input.readInt("Votre choix : ");
-
-            switch (choix) {
+            choixI = Input.readInt("Votre choix : ");
+            System.out.println("============================================== ");
+            System.out.println(" ");
+            switch (choixI) {
 
                 case 1:
                     patientService.ajouterPatient();
@@ -44,15 +48,22 @@ public class InfirmierMenu {
                 case 3:
                    patientService.modifierPatient();
                     break;
-
-                case 4:
+                case 4 :
+                	patientService.supprimerPatient();
+                	break;
+                case 5:
                 	Patient pati = patientService.rechercherPatient();
                 	DossierMedical dossier=dossierService.trouverDossier(pati.getId());
                 	consultationService.afficherConsultationI(dossier.getId());
                 	break;
-                case 5:
+                case 6:
+                	Patient pat = patientService.rechercherPatient();
+                	DossierMedical doss=dossierService.trouverDossier(pat.getId());
+                	consultationService.programmerConsultation(doss);
+                	break;
+                case 7:
                     dossierService.consulterDossier(user.getNivAcces());
-                    break;
+                    break;                	
                 case 0:
                     System.out.println("Déconnexion...");
                     break;
@@ -61,6 +72,6 @@ public class InfirmierMenu {
                     System.out.println("Choix invalide.");
             }
 
-        } while (choix != 0);
+        } while (choixI != 0);
     }
 }

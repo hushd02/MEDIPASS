@@ -51,7 +51,7 @@ public class Utilisateur {
         this.role = role;
         this.nivAcces = nivAcces;
         this.numOrdre = numOrdre;
-        this.specialite = spe;
+        this.setSpecialite(spe);
     }
 
     // ---- GETTERS ----
@@ -82,7 +82,12 @@ public class Utilisateur {
     public void setRole(Role role) { this.role = role; }
     public void setNivAcces(int nivAcces) { this.nivAcces = nivAcces; }
 	public void setNumOrdre(long numOrdre) {this.numOrdre = numOrdre;}
-	public void setSpecialite(Specialite specialite) {this.specialite = specialite;}
+	public void setSpecialite(Specialite specialite) {
+		if(specialite==null) {
+			specialite = Specialite.AUCUNE;
+		}else
+			this.specialite = specialite;
+		}
 	
 	//autres méthodes
 	public static String sexeChoisi(boolean sexe) {

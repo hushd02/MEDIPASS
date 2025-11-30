@@ -5,7 +5,8 @@ public enum Specialite {
     GENERALISTE(2),
     DENTISTE(3),
     OPHTALMOLOGUE(4),
-    PEDIATRE(5);
+    PEDIATRE(5),
+	AUCUNE(6);
 
     private final int code;
 

@@ -17,10 +17,10 @@ public class Authentification {
 
         GestionUtilisateur gestionUser = new GestionUtilisateur();
         List<Utilisateur> allUtilisateur = gestionUser.recupererAll();
-        
+        String hashed = medipass.utils.PasswordUtils.hash(password);
         for (Utilisateur u : allUtilisateur) {
             if (u.getLogin().equalsIgnoreCase(login)
-                && u.getPassword().equals(password)) {
+                && u.getPassword().equals(hashed)) {
                 System.out.println(" Connexion réussie !");
                 return u;
             }

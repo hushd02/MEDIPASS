@@ -244,16 +244,19 @@ public class GestionDisponibilite {
 				+ doc.getSpecialite());
 		System.out.println("Disponibilité :");
 		GestionDisponibilite gest = new GestionDisponibilite();
-
+		boolean bon=false;
 		for (int i = 1; i <= 7; i++) {
 			String jour = Disponibilite.jourSelectionner(i);
 			List<LocalTime> heureJour = gest.trieHeuresEstLibre(i, doc.getId());
 
 			if (!heureJour.isEmpty()) {
 				System.out.println(jour + " : " + heureJour);
-			} else
-				System.out.println("Aucune Disponibilité enregistrée.");
+				bon = true;
+			}
+				
 		}
+		if(!bon)System.out.println("Aucune Disponibilité enregistrée.");
+		
 		System.out.println(" ");
 	}
 
@@ -311,11 +314,10 @@ public class GestionDisponibilite {
 							quiter = Input.readYesNo("Voullez-vous quitter cette option? (Y/N) : ");							
 						}
 					}if (quiter)
-						break;
+						return null;
 				}
 			}
-			if (quiter)
-				break;
+
 			String jour = Disponibilite.jourSelectionner(j);
 
 			boolean repet = false;
@@ -368,6 +370,7 @@ public class GestionDisponibilite {
 
 	// méthodes pour supprimer des disponibilités
 	public void supprimerDisponibilite(Utilisateur doc) {
+		System.out.println(" ");
 		System.out.println("Option en cours : Suppression d'une disponibilité");
 
 		Scanner scanner = InputManager.getInstance().getScanner();
@@ -382,19 +385,15 @@ public class GestionDisponibilite {
 
 			while (!verifJ || !enregis) {
 				System.out.println(" ");
-				System.out.println("veuillez enter numéro du jour correspndant.");
+				System.out.println("veuillez enter le numéro du jour correspndant.");
 				System.out.println("1->Lundi; 2->Mardi; 3->Mercredie; 4->Jeudi; 5->Vendredi; 6->Samedi; 7->Dimanche");
-				System.out.print("Jour (1-7): ");
-				if (scanner.hasNextInt()) {
-					j = scanner.nextInt();
+			
+					j = Input.readInt("Jour (1-7)");
 					verifJ = Disponibilite.verifierjour(j);
-				} else {
-					scanner.next();
-				}
+			
 				if (!verifJ) {
 					System.out.println("Veuillez indiquer un Jour valide!! (1-7)");
 				} else {
-					InputManager.getInstance().clearBuffer();
 
 					// vérifie qu'une disponibilité existe au jour entré
 					if (!enregis) {
