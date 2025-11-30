@@ -62,7 +62,7 @@ public class InfirmierMenu {
                 	consultationService.programmerConsultation(doss);
                 	break;
                 case 7:
-                    dossierService.consulterDossier(user.getNivAcces());
+                    dossierService.consulterDossier(user.getNivAcces(),0);
                     break;                	
                 case 0:
                     System.out.println("Déconnexion...");

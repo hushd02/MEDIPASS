@@ -15,9 +15,7 @@ public class MedecinMenu {
     private GestionConsultation consultationService = new GestionConsultation();
     private GestionDossierMedical dossierService = new GestionDossierMedical();
     private GestionPatient patientService = new GestionPatient();	
-    // ================================
-    //   MENU PRINCIPAL DU MEDECIN
-    // ================================
+
     public void afficherMenuMedecin(Utilisateur user) {
 
         int choixM;
@@ -29,7 +27,7 @@ public class MedecinMenu {
             System.out.println("2. Ajouter une disponibilité");
             System.out.println("3. Supprimer une disponibilité");
             System.out.println("4. Afficher mes consultations");
-            System.out.println("5. Trouver une consultation");
+            System.out.println("5. Trouver et passer une consultation");
             System.out.println("6. Afficher les consultations d'un patient");
             System.out.println("7. Consulter un dossier médical patient");
             System.out.println("0. Déconnexion");
@@ -47,7 +45,7 @@ public class MedecinMenu {
 
                 case 4 -> consultationService.afficherConsultationM(user.getId());
                 
-                case 5 -> consultationService.trouverConsultation(user);
+                case 5 -> consultationService.passerConsultation(user);
                 
                 case 6 -> {
 
@@ -56,11 +54,11 @@ public class MedecinMenu {
 	            	consultationService.afficherConsultationI(dossier.getId());
                 }
                 case 7 -> {
-                	 dossierService.consulterDossier(user.getNivAcces());
+                	 dossierService.consulterDossier(user.getNivAcces(), 0);
                 }
 
                 case 0 -> System.out.println("Déconnexion...");
-                default -> System.out.println("❌ Choix invalide !");
+                default -> System.out.println("! Choix invalide !");
             }
 
         } while (choixM != 0);

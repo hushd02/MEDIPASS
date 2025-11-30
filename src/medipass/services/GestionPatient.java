@@ -156,6 +156,7 @@ public class GestionPatient {
     
     public void ajouterPatient () {
     	 System.out.println("Option en cours : Création d'un compte patient");
+    	 System.out.println("");
     	 String nom = Input.readNonEmptyString("Nom : ");
          String prenom = Input.readNonEmptyString("Prénom : ");
          String email = Input.readOptionalString("Email ");
@@ -186,10 +187,10 @@ public class GestionPatient {
     	     DossierMedical newDossier = new DossierMedical(sexe, dateNaissance, "", "", newPatient.getId());
     	     gestionDM.inserer(newDossier);
     	     
-    	     System.out.println("✅ Patient " + newPatient.getNom() + " enregistré avec succès (ID: " + newPatient.getId() + ").");
+    	     System.out.println("Patient " + newPatient.getNom() + " enregistré avec succès (ID: " + newPatient.getId() + ").");
     	     
     	 } catch (RuntimeException e) {
-    	     System.err.println("❌ Erreur d'enregistrement: " + e.getMessage());
+    	     System.err.println("Erreur d'enregistrement: " + e.getMessage());
     	 }
     }   
     
@@ -209,9 +210,10 @@ public class GestionPatient {
         		if(quiter)
         			return null;
         	}else 
+        		System.out.println("Patient n° "+pati.getId()+" retrouvé");
         		corr=true;
         	}
-
+    		System.out.println("");
     		System.out.println("=================================================");
     		System.out.println("Patient n°"+pati.getId()+"; Nom : "+pati.getNom()+"; Prénom : "+pati.getPrenom());
     		System.out.println("Contact: Numéro de téléphone : "+pati.getNumTel()+"; Email : "+pati.getEmail());
@@ -273,7 +275,5 @@ public class GestionPatient {
     	}else 
     		return;
     		
-    }
-   
-    
+    } 
 }

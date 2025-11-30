@@ -246,14 +246,15 @@ public class GestionConsultation {
 		Scanner scanner = InputManager.getInstance().getScanner();
 
 	
-			
-			String motif = Input.readOptionalString("Entrez le motif de votre consultation.");
-			GestionMedecin gestionM = new GestionMedecin();
+		System.out.println("");
+			String motif = Input.readString("Entrez le motif de votre consultation : ");
 			GestionDisponibilite gestionD = new GestionDisponibilite();
 			GestionUtilisateur gestionU = new GestionUtilisateur();
 			GestionConsultation gestionC = new GestionConsultation();
 
 			List<Utilisateur> allMedecin = gestionU.recupererParRole(Role.MEDECIN);
+			System.out.println("");
+			System.out.println("Affichage des disponibilités libres du système.");
 			for (int i = 0; i < allMedecin.size(); i++) {
 				Utilisateur doc = allMedecin.get(i);
 				gestionD.consulterDispoParInfirmier(doc);
@@ -272,7 +273,7 @@ public class GestionConsultation {
 				idDoc = scanner.nextInt();
 				InputManager.getInstance().clearBuffer();
 
-				leDoc = gestionM.trouverDoc(idDoc);
+				leDoc = gestionU.trouverDoc(idDoc);
 				if (leDoc != null) {
 					idCorrect = true;
 				}
@@ -331,7 +332,7 @@ public class GestionConsultation {
 			} else
 				erreur = false;
 		}
-		GestionMedecin gestionM = new GestionMedecin();
+		GestionUtilisateur gestionU = new GestionUtilisateur();
 		GestionConsultation gestionC = new GestionConsultation();
 		List<Consultation> allConsul = gestionC.recupererParDossier(idDossier);
 		LocalDate today = LocalDate.now();
@@ -340,7 +341,7 @@ public class GestionConsultation {
 			case 1: {
 				for (Consultation consul : allConsul) {
 					if (consul.getObservation().isEmpty() && consul.getDate().compareTo(today) >= 0) {
-						Utilisateur doc = gestionM.trouverDoc(consul.getIdMedecin());
+						Utilisateur doc = gestionU.trouverDoc(consul.getIdMedecin());
 						System.out.println("Consultation prévue le " + consul.getDate() + " à " + consul.getHeure()
 								+ " avec le Medecin "
 								+ doc.getNom() + " " + doc.getPrenom() + " Spécialite :" + doc.getSpecialite());
@@ -351,12 +352,12 @@ public class GestionConsultation {
 			case 2: {
 				for (Consultation consul : allConsul) {
 					if (!consul.getObservation().isEmpty() && consul.getDate().compareTo(today) < 0) {
-						Utilisateur doc = gestionM.trouverDoc(consul.getIdMedecin());
+						Utilisateur doc = gestionU.trouverDoc(consul.getIdMedecin());
 						System.out.println("Consultation effectuer le " + consul.getDate() + " à " + consul.getHeure()
 								+ " avec le Medecin "
 								+ doc.getNom() + " " + doc.getPrenom() + " Spécialite :" + doc.getSpecialite());
 					} else if (consul.getObservation().isEmpty() && consul.getDate().compareTo(today) < 0) {
-						Utilisateur doc = gestionM.trouverDoc(consul.getIdMedecin());
+						Utilisateur doc = gestionU.trouverDoc(consul.getIdMedecin());
 						System.out.println("Consultation manquée le " + consul.getDate() + " à " + consul.getHeure()
 								+ " avec le Medecin "
 								+ doc.getNom() + " " + doc.getPrenom() + " Spécialite :" + doc.getSpecialite());
@@ -366,7 +367,7 @@ public class GestionConsultation {
 			}
 			case 3: {
 				for (Consultation consul : allConsul) {
-					Utilisateur doc = gestionM.trouverDoc(consul.getIdMedecin());
+					Utilisateur doc = gestionU.trouverDoc(consul.getIdMedecin());
 					System.out.println("Consultation enregistrée le " + consul.getDate() + " à " + consul.getHeure()
 							+ " avec le Medecin "
 							+ doc.getNom() + " " + doc.getPrenom() + " Spécialite :" + doc.getSpecialite());
@@ -381,7 +382,7 @@ public class GestionConsultation {
 	public void afficherPrescription(int idDossier) {
 
 		Scanner scanner = InputManager.getInstance().getScanner();
-		GestionMedecin gestionM = new GestionMedecin();
+		GestionUtilisateur gestionU = new GestionUtilisateur();
 		GestionConsultation gestionC = new GestionConsultation();
 		List<Consultation> allPrescrip = gestionC.recupererParPrescrip(idDossier);
 
@@ -407,7 +408,7 @@ public class GestionConsultation {
 			case 1: {
 				Consultation consul = allPrescrip.get(0);
 
-				Utilisateur doc = gestionM.trouverDoc(consul.getIdMedecin());
+				Utilisateur doc = gestionU.trouverDoc(consul.getIdMedecin());
 				System.out.println("Prescription :" + consul.getPrescription());
 				System.out.println("Prescription donnée le " + consul.getDate() + " par le Medecin "
 						+ doc.getNom() + " " + doc.getPrenom() + " Spécialite :" + doc.getSpecialite());
@@ -441,7 +442,7 @@ public class GestionConsultation {
 					} else {
 						for (int i = 0; i <= n; i++) {
 							Consultation consul = allPrescrip.get(i);
-							Utilisateur doc = gestionM.trouverDoc(consul.getIdMedecin());
+							Utilisateur doc = gestionU.trouverDoc(consul.getIdMedecin());
 							System.out.println("Prescription :" + consul.getPrescription());
 							System.out.println("Prescription donnée le " + consul.getDate() + " par le Medecin "
 									+ doc.getNom() + " " + doc.getPrenom() + " Spécialite :" + doc.getSpecialite());
@@ -452,7 +453,7 @@ public class GestionConsultation {
 			}
 			case 3: {
 				for (Consultation consul : allPrescrip) {
-					Utilisateur doc = gestionM.trouverDoc(consul.getIdMedecin());
+					Utilisateur doc = gestionU.trouverDoc(consul.getIdMedecin());
 					System.out.println("Prescription :" + consul.getPrescription());
 					System.out.println("Prescription donnée le " + consul.getDate() + " par le Medecin "
 							+ doc.getNom() + " " + doc.getPrenom() + " Spécialite :" + doc.getSpecialite());
@@ -472,6 +473,7 @@ public class GestionConsultation {
 
 		while (erreur) {
 			System.out.println(" ");
+			System.out.println("****************************************");
 			System.out.println("Consulter la liste des consultations ");
 			System.out.println("Veuillez choisir une option");
 			System.out.println("1/afficher les consultations futures. ");
@@ -480,20 +482,25 @@ public class GestionConsultation {
 			System.out.println("4/quitter l'option.");
 			choix = scanner.nextInt();
 			InputManager.getInstance().clearBuffer();
+			System.out.println("*****************************************");
+			System.out.println(" ");
 			if (choix < 1 || choix > 4) {
 				System.out.println("Veuiller entrer une option valide!!");
 			} else
 				erreur = false;
 		}
+			
 		GestionConsultation gestionC = new GestionConsultation();
 		List<Consultation> allConsul = gestionC.recupererParMedecin(idMedecin);
 		LocalDate today = LocalDate.now();
-
+		
 		switch (choix) {
 			case 1: {
 				for (Consultation consul : allConsul) {
 					if (consul.getObservation().isEmpty() && consul.getDate().compareTo(today) >= 0) {
+						System.out.println("----------------------------");
 						System.out.println("Consultation prévue le " + consul.getDate() + " à " + consul.getHeure());
+						System.out.println("--------------------------- ");
 					}
 				}
 				break;
@@ -501,16 +508,22 @@ public class GestionConsultation {
 			case 2: {
 				for (Consultation consul : allConsul) {
 					if (!consul.getObservation().isEmpty() && consul.getDate().compareTo(today) < 0) {
+						System.out.println("--------------------------- ");
 						System.out.println("Consultation effectuer le " + consul.getDate() + " à " + consul.getHeure());
+						System.out.println("--------------------------- ");
 					} else if (consul.getObservation().isEmpty() && consul.getDate().compareTo(today) < 0) {
+						System.out.println("--------------------------- ");
 						System.out.println("Consultation manquée le " + consul.getDate() + " à " + consul.getHeure());
+						System.out.println("--------------------------- ");
 					}
 				}
 				break;
 			}
 			case 3: {
 				for (Consultation consul : allConsul) {
+					System.out.println("--------------------------- ");
 					System.out.println("Consultation enregistrée le " + consul.getDate() + " à " + consul.getHeure());
+					System.out.println("--------------------------- ");
 				}
 				break;
 			}
@@ -530,6 +543,8 @@ public class GestionConsultation {
 		Scanner scanner = InputManager.getInstance().getScanner();
 		do {
 			while (!correct) {
+				System.out.println("");
+				System.out.println("----------------------------------");
 				System.out.println("Veuiller Choisir une option");
 				System.out.println("1- Ajouter des Observations.");
 				System.out.println("2- Supprimer des Observations.");
@@ -537,6 +552,8 @@ public class GestionConsultation {
 
 				choix = scanner.nextInt();
 				InputManager.getInstance().clearBuffer();
+				System.out.println("----------------------------------");
+				System.out.println("");
 				if (choix < 1 || choix > 3) {
 					System.out.println("Veuillez entrer un choix valide!!");
 				} else
@@ -593,13 +610,17 @@ public class GestionConsultation {
 		Scanner scanner = InputManager.getInstance().getScanner();
 		do {
 			while (!correct) {
+				System.out.println("");
+				System.out.println("----------------------------------");
 				System.out.println("Veuiller Choisir une option");
 				System.out.println("1- Ajouter des Prescriptions.");
 				System.out.println("2- Supprimer des Prescriptions.");
 				System.out.println("3- Quitter les options.");
 
 				choix = scanner.nextInt();
-				InputManager.getInstance().clearBuffer();
+				InputManager.getInstance().clearBuffer();				
+				System.out.println("----------------------------------");
+				System.out.println("");
 				if (choix < 1 || choix > 3) {
 					System.out.println("Veuillez entrer un choix valide!!");
 				} else
@@ -661,12 +682,16 @@ public class GestionConsultation {
 			if(dos.getId()==consul.getIdDossier() && date.compareTo(consul.getDate())==0 ) {
 				System.out.println("=======================================================");
 				System.out.println("Consultation numéro n°"+consul.getId()+"; programmer le "+consul.getDate()+" à "+consul.getHeure());
+				System.out.println("Motif : "+consul.getMotif());
+				System.out.println("Observation : "+consul.getObservation());
+				System.out.println("Prescription : "+consul.getPrescription());
 				System.out.println("=======================================================");
 				consulTrouver=true;
 			}
 		}
 		if(consulTrouver) {
 			while(true) {
+				System.out.println("");
 				int idConsul = Input.readInt("Veuillez indiquer l'id de la consultation recherchée : ");
 				for(Consultation consul : allConsul) {
 					if(consul.getId()==idConsul)
@@ -677,12 +702,40 @@ public class GestionConsultation {
 				if(quiter)
 					return null;
 			}
+		
 		}else
 			return null;
-
+	}
 	
+	public void passerConsultation (Utilisateur user) {
+		System.out.println("Option en cours : Faire passer une consultation");
+		System.out.println("");
+		GestionConsultation gestionC = new GestionConsultation();
+		GestionDossierMedical gestionDM = new GestionDossierMedical();
+		Consultation consul = gestionC.trouverConsultation(user);
+		int choixConsul =5;
 		
-		
+		do {
+			System.out.println("");
+			System.out.println("*******************************************");
+			System.out.println("Veuiller faire un choix");
+			System.out.println("1. Afficher le dossier médical du patient");
+			System.out.println("2. Modifier les observations");
+			System.out.println("3. Modifier les prescriptions");
+			System.out.println("0. Quitter la consultation ");
+			choixConsul = Input.readInt("Votre choix :");
+			System.out.println("*******************************************");
+			System.out.println("");
+			
+			switch(choixConsul) {
+			case 1 -> gestionDM.consulterDossier(user.getNivAcces(), consul.getIdDossier());
+			case 2 -> gestionC.ModifierObservation(consul); 
+			case 3 -> gestionC.ModifierPrescription(consul);
+			case 0 -> System.out.println(" -------Sortie de la consultation -------");
+			default -> System.out.println("Option invalide !");
+			}
+			
+		}while(choixConsul != 0);
 		
 	}
 	

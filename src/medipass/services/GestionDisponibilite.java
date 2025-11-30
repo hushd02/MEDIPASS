@@ -239,10 +239,11 @@ public class GestionDisponibilite {
 
 	// méthodes pour afficher la disponibilité du côté patient et médecin
 	public void consulterDispoParInfirmier(Utilisateur doc) {
-		System.out.println("Information du Médecin : ");
-		System.out.println(doc.getId() + "-/ Nom et prénom : " + doc.getNom() + " " + doc.getPrenom() + " Spécialité :"
+		System.out.println("******************************************************************");
+		System.out.println("Information du Médecin :");
+		System.out.println("Id: "+doc.getId()+ "; Nom et prénom : " + doc.getNom() + " " + doc.getPrenom() + "; Spécialité : "
 				+ doc.getSpecialite());
-		System.out.println("Disponibilité :");
+		System.out.println("Disponibilités libres :");
 		GestionDisponibilite gest = new GestionDisponibilite();
 		boolean bon=false;
 		for (int i = 1; i <= 7; i++) {
@@ -252,16 +253,15 @@ public class GestionDisponibilite {
 			if (!heureJour.isEmpty()) {
 				System.out.println(jour + " : " + heureJour);
 				bon = true;
-			}
-				
+			}	
 		}
-		if(!bon)System.out.println("Aucune Disponibilité enregistrée.");
+		if(!bon)System.out.println("Aucune Disponibilité disponible.");
 		
-		System.out.println(" ");
+		System.out.println("******************************************************************");
 	}
 
 	public void consulterDispoParMedecin(Utilisateur doc) {
-		System.out.println("---- Option en cours : Affichage des disponibilités enreistrées ----");
+		System.out.println("---- Option en cours : Affichage des disponibilités enregistrées ----");
 		System.out.println("Disponibilité enregistrée par Jour :");
 		GestionDisponibilite gest = new GestionDisponibilite();
 
@@ -288,6 +288,7 @@ public class GestionDisponibilite {
 			int j = 0;
 
 			while (!verifJ || !enregis) {
+				System.out.println("");
 				System.out.println("veuillez enter numéro du jour correspndant.");
 				System.out.println("1->Lundi; 2->Mardi; 3->Mercredie; 4->Jeudi; 5->Vendredi; 6->Samedi; 7->Dimanche");
 				System.out.print("Jour (1-7): ");
@@ -322,7 +323,7 @@ public class GestionDisponibilite {
 
 			boolean repet = false;
 			do {
-
+				System.out.println("");
 				System.out.println("Entrez l'heure à réserver.");
 				int h = 0;
 				boolean verifH = false;
@@ -358,6 +359,7 @@ public class GestionDisponibilite {
 				}
 				if (!trouver) {
 					System.out.println("Aucun enregistrement n'a été effectuer le " + jour + " à " + heure + ".");
+					System.out.println("");
 					repet = Input.readYesNo("Voullez-vous réserver une autre heure le " + jour + "?");
 		
 				}
@@ -460,7 +462,9 @@ public class GestionDisponibilite {
 					System.out.println("Aucun enregistrement n'a été effectuer le " + jour + " à " + heure + ".");
 
 					List<LocalTime> trieJourHeur = gestion.trieHeuresJour(j, doc.getId());
-					System.out.println("Voici une liste des heures que vous avez enregistré : " + trieJourHeur);
+					System.out.println("==================================================================================");
+					System.out.println("Voici une liste des heures que vous avez enregistré le "+jour+" : " + trieJourHeur);
+					System.out.println("==================================================================================");
 				}
 
 				System.out.println(" ");
@@ -479,6 +483,7 @@ public class GestionDisponibilite {
 		boolean repeter;
 		do {
 			// choix du Jour
+			System.out.println(" ");
 			System.out.println("veuillez enter numéro du jour correspndant.");
 			System.out.println("1->Lundi; 2->Mardi; 3->Mercredie; 4->Jeudi; 5->Vendredi; 6->Samedi; 7->Dimanche");
 
@@ -486,7 +491,7 @@ public class GestionDisponibilite {
 			int j = 0;
 
 			while (!verifJ) {
-				System.out.print("Jour (1-7): ");
+				System.out.print("Jour (1-7) : ");
 				if (scanner.hasNextInt()) {
 					j = scanner.nextInt();
 					verifJ = Disponibilite.verifierjour(j);
@@ -527,7 +532,7 @@ public class GestionDisponibilite {
 				for (int i = 0; i < toutesLesDisponibilites.size(); i++) {
 					Disponibilite dispo = toutesLesDisponibilites.get(i);
 					if (j == dispo.getJour() && heure.equals(dispo.getHeure())) {
-						System.out.println("enregistrement a déjà été effectuer le " + jour + " à " + heure + ".");
+						System.out.println("Un enregistrement a déjà été effectuer le " + jour + " à " + heure + ".");
 						trouver = true;
 						break;
 					}
@@ -537,10 +542,11 @@ public class GestionDisponibilite {
 					gestion.insererDispo(dispo);
 					System.out.println("Disponibilité enregistrée avec succès.");
 				}
+				System.out.println("");
 				repeterH = Input.readYesNo("Voullez-vous ajouter une autre heure le " + jour + "?");
 	
 			} while (repeterH);
-
+			System.out.println("");
 			repeter = Input.readYesNo("Voullez-vous continuer l'enregistrement sur un autre jour?");
 
 		} while (repeter);

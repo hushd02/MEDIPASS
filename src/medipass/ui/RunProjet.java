@@ -8,7 +8,7 @@ public class RunProjet {
 	public static void runProjet () {
 		System.out.println("================================================= ");
 		System.out.println("************ BIENVENUE SUR MEDIPASS **************");
-		System.out.println("Système de centralisation des données médicaux.");
+		System.out.println("Système de centralisation des données médicales.");
 		System.out.println("================================================= ");
 		Utilisateur user = null; int choixBase=3;
 		do {

@@ -29,7 +29,7 @@ public class PharmacienMenu {
 
                 case 1 :
                 	GestionDossierMedical gestion = new GestionDossierMedical();
-                	gestion.consulterDossier(user.getNivAcces());
+                	gestion.consulterDossier(user.getNivAcces(),0);
                 	break;
                 case 2 :
                 	PharmacienMenu pharmaMenu = new PharmacienMenu();

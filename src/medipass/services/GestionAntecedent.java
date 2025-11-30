@@ -13,7 +13,6 @@ import java.util.List;
 import medipass.models.Antecedent;
 import medipass.utils.ControleBD;
 import medipass.utils.Input;
-import medipass.utils.InputManager;
 
 public class GestionAntecedent {
 
@@ -64,7 +63,7 @@ public class GestionAntecedent {
 			System.out.println("Antecedent n°" + ante.getId() + " (" + ante.getProbleme() + ") ennregistré.");
 
 		} catch (SQLException e) {
-			System.err.println("Erreur lors de l'insertion de la disponibilité : " + e.getMessage());
+			System.err.println("Erreur lors de l'insertion de l'antecedent : " + e.getMessage());
 		}
 	}
 
@@ -137,7 +136,7 @@ public class GestionAntecedent {
 	   public void modifierAnte(Antecedent ante) {
 	        System.out.println("Option en cours : Modification d'un antécédent");
 
-
+	        System.out.println("");
 	        LocalDate date = Input.readOptionalDate("Nouvelle date de naissance (laisser vide pour ne pas changer) : ");
 	        if (date != null) ante.setDate(date);
 	        
@@ -151,10 +150,11 @@ public class GestionAntecedent {
 
 	        String prescription = Input.readOptionalString("Nouvelle prescription (laisser vide pour ne pas changer) : ");
 	        if (!prescription.isEmpty()) ante.setPrescription(prescription);
-	        
+	        System.out.println("");
 	        GestionAntecedent gestion =new GestionAntecedent();
 	        boolean good = gestion.modifier(ante);
 	        if(good)
+	        	
 	        	System.out.println("Modification enregistrée avec succès");
 	        
 	    }
@@ -171,29 +171,29 @@ public class GestionAntecedent {
 		}
 	   
 	public void consulterAnte(int idDossier, int nivAcces) {
+		System.out.println("Option es cours : ");
 		GestionAntecedent gestion = new GestionAntecedent();
 		List<Antecedent> antecedentDossier = gestion.recupererParDossier(idDossier);
 
 		for (int i = 0; i < antecedentDossier.size(); i++) {
 			Antecedent ante = antecedentDossier.get(i);
-
-			System.out.println("----- Antécédent n°" + ante.getId() + " -----");
-			System.out.print("Date : " + ante.getDate() + " / ");
-			System.out.println("Problème : " + ante.getProbleme());
+			System.out.println("");
+			System.out.println("----- Antécédent n°" + ante.getId() + " ---------");
+			System.out.println("Date : " + ante.getDate() + "; Problème : " + ante.getProbleme());
 			System.out.println("Description : " + ante.getDescription());
 			System.out.println("Prescription : " + ante.getPrescription());
-			System.out.println("-----------------------------------------");
+			System.out.println("---------------------------------------------");
 			System.out.println(" ");
 		}
 		int choixAnte = 3;
 		do{
-			System.out.println(" ");
+			System.out.println("*******************************");
 			System.out.println("Veuillez choisir une option");
 			System.out.println("1. Modifier un antecedent");
 	        System.out.println("0. Retour aux choix précedent");
 			
 	        choixAnte = Input.readInt("Votre choix : ");
-	        
+	        System.out.println("*******************************");
 	        switch(choixAnte) {
 	        case 1 :{
 	        	if(nivAcces==4) {
@@ -201,7 +201,6 @@ public class GestionAntecedent {
 	        		Antecedent ante =null;
 	            	while(!corr) {
 	            	idAnte = Input.readInt("Veuillez entrer l'id de l'antécédent concerné.");
-	            	InputManager.getInstance().clearBuffer();
 	            	
 	            	ante = gestion.trouverAnte(idDossier,idAnte);
 	            	if(ante==null) {

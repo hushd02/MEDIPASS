@@ -138,7 +138,7 @@ public class GestionDossierMedical {
             if (affectedRows > 0) {
     			GestionPatient gestionPat = new GestionPatient();
     			Patient pat = gestionPat.trouverPatient(dossier.getIdPatient());
-            	System.out.println("Dossier Médical n°"+dossier.getId()+" ("+pat.getNom()+" "+pat.getPrenom()+") supprimé.");
+            	System.out.println("Dossier Médical Id:"+dossier.getId()+" ("+pat.getNom()+" "+pat.getPrenom()+") supprimé.");
             }
         } catch (SQLException e) {
             System.err.println("Erreur lors de la suppression : " + e.getMessage());
@@ -158,7 +158,7 @@ public class GestionDossierMedical {
 	
     public void modifierDossier(DossierMedical dossier) {
         System.out.println("Option en cours : Modification d'un dossier Médical");
-        
+        System.out.println(" ");
         
         // --- Date de naissance ---
         LocalDate date = Input.readOptionalDate("Nouvelle date de naissance (laisser vide pour ne pas changer) : ");
@@ -171,7 +171,7 @@ public class GestionDossierMedical {
         // --- Prénom ---
         String allergies = Input.readOptionalString("Nouvelles allergies (laisser vide pour ne pas changer) : ");
         if (!allergies.isEmpty()) dossier.setAllergies(allergies);
-
+        System.out.println(" ");
         GestionDossierMedical gestion =new GestionDossierMedical();
         boolean good = gestion.modifier(dossier);
         if(good)
@@ -179,31 +179,36 @@ public class GestionDossierMedical {
         
     }
 	
-	public void consulterDossier (int nivAcces) {
-		System.out.println("Option en cours : Consulter un dossier Medecal");
+	public void consulterDossier (int nivAcces, int inConsul) {
+		System.out.println("Option en cours : Consulter un dossier Medical");
     	GestionPatient gestionP = new GestionPatient();
     	GestionDossierMedical gestionDM = new GestionDossierMedical();
     	GestionAntecedent gestionA = new GestionAntecedent();
     	GestionConsultation gestionC = new GestionConsultation();
-    	
-    	Patient pati = gestionP.rechercherPatient();
+    	System.out.println(" ");
+    	Patient pati =null;
+    	if(inConsul==0) {
+    		pati = gestionP.rechercherPatient();
+    	}else
+    		pati = gestionP.trouverPatient(inConsul);
     	if(pati==null)
     		return;
     	int choixDossier = 4;
     	
 		DossierMedical dossier = gestionDM.trouverDossier(pati.getId());
 		String s = Utilisateur.sexeChoisi(dossier.isSexe());
+		System.out.println(" ");
 		System.out.println("===================================================");
 		System.out.println("Option en cours : Afficher le Dossier Médical");
-		System.out.println("Patient n°"+dossier.getId()+" .Nom : "+pati.getNom()+". Prenom : "+pati.getPrenom());
+		System.out.println("Patient n°"+dossier.getId()+". Nom : "+pati.getNom()+". Prenom : "+pati.getPrenom());
 		System.out.println("Age : "+dossier.getDateNaissance()+"; Sexe :"+s+". Groupe Sanguin :"+dossier.getGroupeSang());
 		System.out.println("Contacte : "+pati.getNumTel()+". Email : "+pati.getEmail());
 		System.out.println("Allergies : "+dossier.getAllergies());
-		System.out.println("Contacte : "+pati.getNumTel()+". Email : "+pati.getEmail());
 		System.out.println("===================================================");
 		
 		do{
-		
+			System.out.println("");
+			System.out.println("*********************************");
 			System.out.println("Veuillez choisir une option");
 			System.out.println("1. Modifier le dossier médical");
 	        System.out.println("2. Afficher les antécedants");
@@ -211,8 +216,8 @@ public class GestionDossierMedical {
 	        System.out.println("0. Retour au menu");
 			
 	        choixDossier = Input.readInt("Votre choix : ");
-
-	        
+	        System.out.println("**********************************");
+	        System.out.println("");
 	        switch(choixDossier) {
 	        case 1 : {
 	        	if(nivAcces == 4) {
@@ -235,7 +240,7 @@ public class GestionDossierMedical {
 	        		System.out.println("Veuillez-vous rapprocher de l'administrateur pour le modifier");	
 	        		break;
 	        case 0 :System.out.println("Retour au menu…");break;
-	        default : System.out.println("Option invalide !");break;
+	        default : System.out.println("! Option invalide !");break;
 	        }	
 		}while(choixDossier!=0);
 	}
