@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import medipass.models.Antecedent;
+import medipass.models.Consultation;
 import medipass.utils.ControleBD;
 import medipass.utils.Input;
 
@@ -73,7 +74,7 @@ public class GestionAntecedent {
 
 		// La requête corrigée, sélectionnant les utilisateurs dont le rôle correspond
 		// au paramètre
-		String sql = "SELECT id, date, probleme, description, prescription, idDossier"
+		String sql = "SELECT id, date, probleme, description, prescription, idDossier "
 				+ " FROM Antecedent "
 				+ " WHERE idDossier = ?";
 
@@ -137,19 +138,19 @@ public class GestionAntecedent {
 	        System.out.println("Option en cours : Modification d'un antécédent");
 
 	        System.out.println("");
-	        LocalDate date = Input.readOptionalDate("Nouvelle date de naissance (laisser vide pour ne pas changer) : ");
+	        LocalDate date = Input.readOptionalDate("Nouvelle date (laisser vide pour ne pas changer) : ");
 	        if (date != null) ante.setDate(date);
 	        
 
 	        String probleme = Input.readOptionalString("Nouveau Problème (laisser vide pour ne pas changer) : ");
-	        if (!probleme.isEmpty()) ante.setProbleme(probleme);
+	        if (probleme!=null && !probleme.isEmpty()) ante.setProbleme(probleme);
 
 
 	        String description = Input.readOptionalString("Nouvelle description du problème (laisser vide pour ne pas changer) : ");
-	        if (!description.isEmpty()) ante.setDescription(description);
+	        if (description!=null && !description.isEmpty()) ante.setDescription(description);
 
 	        String prescription = Input.readOptionalString("Nouvelle prescription (laisser vide pour ne pas changer) : ");
-	        if (!prescription.isEmpty()) ante.setPrescription(prescription);
+	        if (description!=null && !prescription.isEmpty()) ante.setPrescription(prescription);
 	        System.out.println("");
 	        GestionAntecedent gestion =new GestionAntecedent();
 	        boolean good = gestion.modifier(ante);
@@ -174,6 +175,13 @@ public class GestionAntecedent {
 		System.out.println("Option es cours : ");
 		GestionAntecedent gestion = new GestionAntecedent();
 		List<Antecedent> antecedentDossier = gestion.recupererParDossier(idDossier);
+		if(antecedentDossier.size()==0) {
+			System.out.println("Aucun antecedent n'a été enregistrer pour ce patient.");
+			boolean ajout =Input.readYesNo("Voullez-vous ajouter un antécedent? ");
+			if(ajout) {
+				gestion.ajouterAnte(null, idDossier);
+			}else return;
+		}
 
 		for (int i = 0; i < antecedentDossier.size(); i++) {
 			Antecedent ante = antecedentDossier.get(i);
@@ -189,13 +197,22 @@ public class GestionAntecedent {
 		do{
 			System.out.println("*******************************");
 			System.out.println("Veuillez choisir une option");
-			System.out.println("1. Modifier un antecedent");
+			System.out.println("1. Ajouter un antecedent");
+			System.out.println("2. Modifier un antecedent");
 	        System.out.println("0. Retour aux choix précedent");
 			
 	        choixAnte = Input.readInt("Votre choix : ");
 	        System.out.println("*******************************");
 	        switch(choixAnte) {
-	        case 1 :{
+	        case 1:{
+	        	if(nivAcces==4) {	
+	        		gestion.ajouterAnte(null, idDossier);
+	        	}else {
+	        		System.out.println("Votre compte ne dispose pas du niveau d'accès nécessaire pour exécuter cette fonction");
+	        		System.out.println("Veuillez-vous rapprocher de l'administrateur pour le modifier");
+	        	}
+	        }
+	        case 2 :{
 	        	if(nivAcces==4) {
 	        		boolean corr=false;boolean quiter = false;int idAnte = 0;
 	        		Antecedent ante =null;
@@ -212,9 +229,10 @@ public class GestionAntecedent {
 	            		return;
 	            	}
 	        		gestion.modifierAnte(ante);
-	        	}else
+	        	}else {
 	        		System.out.println("Votre compte ne dispose pas du niveau d'accès nécessaire pour exécuter cette fonction");
 	        		System.out.println("Veuillez-vous rapprocher de l'administrateur pour le modifier");
+	        	}
 	        }
 	        case 0:break;
 	        default : System.out.println("Option invalide !");
@@ -223,4 +241,33 @@ public class GestionAntecedent {
 		}while(choixAnte != 0);
 	}
 
+	public void ajouterAnte (Consultation consul, int idDossier) {
+		GestionAntecedent gestionA = new GestionAntecedent();
+		Antecedent ante =null;
+		
+		if(consul!=null) {
+			ante = new Antecedent(consul.getDate(),
+					consul.getMotif(), 
+					consul.getObservation(), 
+					consul.getPrescription(), 
+					consul.getIdDossier() );
+			gestionA.inserer(ante);
+		}else {
+	        System.out.println("");
+	        String probleme = Input.readString("Problème : ");
+	        LocalDate date = Input.readDate("Date d'apparition du problème : ");
+	        String description = Input.readString("Description du problème : ");
+	        String prescription = Input.readOptionalString("Prescription donnée : ");
+	        if(prescription==null)prescription="";
+	        System.out.println("");
+	        
+			boolean quiter = Input.readYesNo("Voullez-vous enregistrer cet antecedent ? ");
+			if (!quiter) {return;}
+			
+			ante = new Antecedent(date, probleme, description, prescription, idDossier);
+			gestionA.inserer(ante);
+		}
+		
+	}
+	
 }

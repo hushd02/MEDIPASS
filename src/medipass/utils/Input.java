@@ -1,7 +1,6 @@
 package medipass.utils;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
@@ -21,7 +20,7 @@ public class Input {
             input = scanner.nextLine().trim();
 
             if (input.isEmpty()) {
-                System.out.println("❌ Entrée invalide : vous devez saisir une valeur !");
+                System.out.println(" Entrée invalide : vous devez saisir une valeur !");
             }
         } while (input.isEmpty());
 
@@ -37,7 +36,7 @@ public class Input {
             try {
                 return Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
-                System.out.println("❌ Veuillez entrer un nombre entier !");
+                System.out.println(" Veuillez entrer un nombre entier !");
             }
         }
     }
@@ -51,7 +50,7 @@ public class Input {
             try {
                 return Long.parseLong(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
-                System.out.println("❌ Veuillez entrer un nombre valide !");
+                System.out.println(" Veuillez entrer un nombre valide !");
             }
         }
     }
@@ -67,7 +66,7 @@ public class Input {
             try {
                 return LocalDate.parse(input, DATE_FORMAT);
             } catch (DateTimeParseException e) {
-                System.out.println("❌ Format de date incorrect !");
+                System.out.println(" Format de date incorrect !");
             }
         }
     }
@@ -83,7 +82,7 @@ public class Input {
             if (input.equalsIgnoreCase("O")) return true;
             if (input.equalsIgnoreCase("N")) return false;
 
-            System.out.println("❌ Réponse invalide ! Tapez O ou N.");
+            System.out.println(" Réponse invalide ! Tapez O ou N.");
         }
     }
     
@@ -95,7 +94,7 @@ public class Input {
             input = scanner.nextLine().trim();
 
             if (input.isEmpty()) {
-                System.out.println("⚠️ Veuillez entrer une valeur !");
+                System.out.println(" Veuillez entrer une valeur !");
                 continue;
             }
 
@@ -104,7 +103,7 @@ public class Input {
             } else if (input.equalsIgnoreCase("F")) {
                 return false; // Femme
             } else {
-                System.out.println("⚠️ Entrée invalide. Veuillez saisir 'M' pour Homme ou 'F' pour Femme.");
+                System.out.println(" Entrée invalide. Veuillez saisir 'M' pour Homme ou 'F' pour Femme.");
             }
         }
     }
@@ -125,7 +124,7 @@ public class Input {
             try {
                 return Long.parseLong(input);
             } catch (NumberFormatException e) {
-                System.out.println("⚠ Veuillez entrer un nombre valide ou laisser vide.");
+                System.out.println(" Veuillez entrer un nombre valide ou laisser vide.");
             }
         }
     }
@@ -141,7 +140,7 @@ public class Input {
             try {
                 return LocalDate.parse(input, DATE_FORMAT);
             } catch (DateTimeParseException e) {
-                System.out.println("⚠ Format invalide. Exemple valide : 25/12/2020");
+                System.out.println(" Format invalide. Exemple valide : 25/12/2020");
             }
         }
     }
@@ -159,7 +158,7 @@ public class Input {
                 case "non":
                     return false;
                 default:
-                    System.out.println("⚠ Réponse invalide. Tapez 'o' pour oui ou 'n' pour non.");
+                    System.out.println(" Réponse invalide. Tapez 'o' pour oui ou 'n' pour non.");
             }
         }
     }
@@ -173,26 +172,9 @@ public class Input {
                 return input;
             }
 
-            System.out.println("⚠ Ce champ est obligatoire. Veuillez entrer une valeur.");
+            System.out.println(" Ce champ est obligatoire. Veuillez entrer une valeur.");
         }
     }
 
-    
-    public static LocalTime readTime(String message) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        LocalTime time = null;
 
-        while (time == null) {
-            try {
-                if (message != null) System.out.print(message);
-                String input = scanner.nextLine().trim();
-
-                time = LocalTime.parse(input, formatter);
-            } catch (DateTimeParseException e) {
-                System.out.println("❌ Format invalide ! Utilisez HH:mm (ex: 07:00, 13:00)");
-            }
-        }
-
-        return time;
-    }
 }

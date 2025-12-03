@@ -222,27 +222,26 @@ public class GestionPatient {
     		return pati;
     }
     
-    public void modifierPatient () {
+    public void modifierPatient (Patient pati) {
     	System.out.println("Option en cours : modification d'un compte patient");
     	GestionPatient gestion = new GestionPatient();
-    	Patient pati = gestion.rechercherPatient();
     	 System.out.println(" ");
     	if(pati==null)
     		return ;
     	 // --- Nom ---
-        String nom = Input.readOptionalString("Nouveau nom (laisser vide pour ne pas changer) : ");
-        if (!nom.isEmpty()) pati.setNom(nom);
+        String nom = Input.readOptionalString("Nouveau nom");
+        if (nom!=null && !nom.isEmpty()) pati.setNom(nom);
 
         // --- Prénom ---
-        String prenom = Input.readOptionalString("Nouveau prénom (laisser vide pour ne pas changer) : ");
-        if (!prenom.isEmpty()) pati.setPrenom(prenom);
+        String prenom = Input.readOptionalString("Nouveau prénom");
+        if (prenom!=null && !prenom.isEmpty()) pati.setPrenom(prenom);
 
         // --- Email ---
-        String email = Input.readOptionalString("Nouvel email (laisser vide pour ne pas changer) : ");
-        if (!email.isEmpty()) pati.setEmail(email);
+        String email = Input.readOptionalString("Nouvel email");
+        if (prenom!=null && !email.isEmpty()) pati.setEmail(email);
 
         // --- Numéro de téléphone ---
-        Long tel = Input.readOptionalLong("Nouveau numéro de téléphone (laisser vide pour ne pas changer) : ");
+        Long tel = Input.readOptionalLong("Nouveau numéro de téléphone : ");
         if (tel != null) pati.setNumTel(tel);
 
 
@@ -251,10 +250,9 @@ public class GestionPatient {
         	System.out.println("Modification enregistrée avec succès");
     }
 
-    public void supprimerPatient() {
+    public void supprimerPatient(Patient pat) {
     	GestionPatient gestionP = new GestionPatient();
     	GestionDossierMedical gestionDM = new GestionDossierMedical(); 
-    	Patient pat = gestionP.rechercherPatient();
     	 System.out.println(" ");
     	boolean sup; 
     	if (pat==null) {
@@ -274,6 +272,34 @@ public class GestionPatient {
     		
     	}else 
     		return;
-    		
     } 
+    
+    public void rechercheP() {
+    	GestionPatient gestionP = new GestionPatient();
+  
+    	Patient pat = gestionP.rechercherPatient();
+    	
+    	
+    	int cho;
+		do {
+			System.out.println(" ");
+			System.out.println("*****************************************");
+			System.out.println("Veuiller Choisir une option");
+            System.out.println("1. Modifier les données du patient ");
+            System.out.println("2. Supprimer le compte patient");
+            System.out.println("0. Retour au menu principal.");
+			cho = Input.readInt("Votre choix : ");
+
+			System.out.println("*********************************");
+			System.out.println("");
+			switch(cho) {
+			case 1-> gestionP.modifierPatient(pat);
+			case 2 -> gestionP.supprimerPatient(pat);
+			case 0 -> System.out.println("----Retour au menu principal-----");
+			default -> System.out.println("Veuillez entrer un choix valide!!");
+			}
+			
+		}while(cho!=0);
+    }
+    
 }

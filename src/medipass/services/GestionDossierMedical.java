@@ -166,11 +166,11 @@ public class GestionDossierMedical {
         
         // --- Nom ---
         String groupeSang = Input.readOptionalString("Nouveau Groupe Sanguin (laisser vide pour ne pas changer) : ");
-        if (!groupeSang.isEmpty()) dossier.setGroupeSang(groupeSang);
+        if (groupeSang!=null && !groupeSang.isEmpty()) dossier.setGroupeSang(groupeSang);
 
         // --- Prénom ---
         String allergies = Input.readOptionalString("Nouvelles allergies (laisser vide pour ne pas changer) : ");
-        if (!allergies.isEmpty()) dossier.setAllergies(allergies);
+        if (allergies!=null && !allergies.isEmpty()) dossier.setAllergies(allergies);
         System.out.println(" ");
         GestionDossierMedical gestion =new GestionDossierMedical();
         boolean good = gestion.modifier(dossier);
@@ -181,6 +181,12 @@ public class GestionDossierMedical {
 	
 	public void consulterDossier (int nivAcces, int inConsul) {
 		System.out.println("Option en cours : Consulter un dossier Medical");
+		if(nivAcces==1) {
+			System.out.println(" ");
+    		System.out.println("Votre compte ne dispose pas du niveau d'accès nécessaire pour exécuter cette fonction");
+    		System.out.println("Veuillez-vous rapprocher de l'administrateur pour le modifier");
+    		return;
+		}
     	GestionPatient gestionP = new GestionPatient();
     	GestionDossierMedical gestionDM = new GestionDossierMedical();
     	GestionAntecedent gestionA = new GestionAntecedent();

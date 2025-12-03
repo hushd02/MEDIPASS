@@ -23,13 +23,11 @@ public class MedecinMenu {
         do {
         	System.out.println(" ");
             System.out.println("================ MENU MEDECIN ==============");
-            System.out.println("1. Voir mes disponibilités");
-            System.out.println("2. Ajouter une disponibilité");
-            System.out.println("3. Supprimer une disponibilité");
-            System.out.println("4. Afficher mes consultations");
-            System.out.println("5. Trouver et passer une consultation");
-            System.out.println("6. Afficher les consultations d'un patient");
-            System.out.println("7. Consulter un dossier médical patient");
+            System.out.println("1. Consulter et/ou modifier mes disponibilités");
+            System.out.println("2. Afficher mes consultations");
+            System.out.println("3. Trouver et/ou faire passer une consultation");
+            System.out.println("4. Afficher les consultations d'un patient");
+            System.out.println("5. Consulter un dossier médical patient");
             System.out.println("0. Déconnexion");
 
             choixM = Input.readInt("Votre choix : ");
@@ -37,23 +35,19 @@ public class MedecinMenu {
             System.out.println(" ");
             switch (choixM) {
 
-                case 1 -> dispoService.consulterDispoParMedecin(user);
+                case 1 -> dispoService.afficherDisponibilite(user);
 
-                case 2 -> dispoService.ajouterDisponibilite(user);
-
-                case 3 -> dispoService.supprimerDisponibilite(user);
-
-                case 4 -> consultationService.afficherConsultationM(user.getId());
+                case 2 -> consultationService.afficherConsultationM(user.getId());
                 
-                case 5 -> consultationService.passerConsultation(user);
+                case 3 -> consultationService.passerConsultation(user);
                 
-                case 6 -> {
+                case 4 -> {
 
 	                Patient pati = patientService.rechercherPatient();
 	            	DossierMedical dossier=dossierService.trouverDossier(pati.getId());
 	            	consultationService.afficherConsultationI(dossier.getId());
                 }
-                case 7 -> {
+                case 5 -> {
                 	 dossierService.consulterDossier(user.getNivAcces(), 0);
                 }
 

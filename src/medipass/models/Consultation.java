@@ -11,13 +11,14 @@ public class Consultation {
 	private LocalTime heure;
 	private String observation;
 	private String prescription;
+	private boolean effectuer;
 	private int idDossier;
 	private int idMedecin;
 	private int idDispo;
 	
 	
 	public Consultation(int id, String motif, LocalDate date, LocalTime heure, String observation,
-			String prescription, int idDossier, int idMedecin, int idDispo ) {
+			String prescription,boolean effectuer, int idDossier, int idMedecin, int idDispo ) {
 		
 		this.setId(id);
 		this.setMotif(motif);
@@ -25,19 +26,21 @@ public class Consultation {
 		this.setHeure(heure);
 		this.setObservation(observation);
 		this.setPrescription(prescription);
+		this.setEffectuer(effectuer);
 		this.setIdDossier(idDossier);
 		this.setIdMedecin(idMedecin);
 		this.setIdDispo(idDispo);
 	}
 	
 	public Consultation(String motif, LocalDate date, LocalTime heure, String observation,
-			String prescription, int idDossier, int idMedecin, int idDispo ) {
+			String prescription, boolean effectuer, int idDossier, int idMedecin, int idDispo ) {
 		
 		this.setMotif(motif);
 		this.setDate(date);
 		this.setHeure(heure);
 		this.setObservation(observation);
 		this.setPrescription(prescription);
+		this.setEffectuer(effectuer);
 		this.setIdDossier(idDossier);
 		this.setIdMedecin(idMedecin);
 		this.setIdDispo(idDispo);
@@ -72,7 +75,11 @@ public class Consultation {
 	public int getIdDispo() {
 		return idDispo;
 	}
-
+	public boolean isEffectuer() {
+			return effectuer;
+		}
+	
+	
 	//setter
 	public void setId(int id) {
 		this.id = id;
@@ -97,7 +104,12 @@ public class Consultation {
 	}
 	public void setIdMedecin(int idMedecin) {
 		this.idMedecin = idMedecin;
-	}	public void setIdDispo(int idDispo) {
+	}	
+	public void setIdDispo(int idDispo) {
 		this.idDispo = idDispo;
 	}
+	public void setEffectuer(boolean effectuer) {
+		this.effectuer = effectuer;
+	}
+
 }

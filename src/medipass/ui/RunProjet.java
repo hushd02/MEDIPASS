@@ -1,6 +1,7 @@
 package medipass.ui;
 
 import medipass.models.Utilisateur;
+import medipass.services.GestionConsultation;
 import medipass.utils.Input;
 
 public class RunProjet {
@@ -10,14 +11,16 @@ public class RunProjet {
 		System.out.println("************ BIENVENUE SUR MEDIPASS **************");
 		System.out.println("Système de centralisation des données médicales.");
 		System.out.println("================================================= ");
-		Utilisateur user = null; int choixBase=3;
+		GestionConsultation gestionC = new GestionConsultation();
+		gestionC.suivreConsul();
+		Utilisateur user = null; int choixBase;
 		do {
 			System.out.println(" ");
-			System.out.println("-------------------------------");
+			System.out.println("================================");
 			System.out.println("1. Connectez-vous au projet ");
 			System.out.println("0. Quitter le projet");			
 			choixBase = Input.readInt("Votre choix : ");
-			System.out.println("-------------------------------");
+			System.out.println("================================");
 			System.out.println(" ");
 			switch(choixBase) { 
 				case 1: {
@@ -53,7 +56,7 @@ public class RunProjet {
 					return ;
 				}	
 				default : 
-					System.out.println("❌ Choix invalide"); break;
+					System.out.println("!!! Choix invalide !!!"); break;
 					
 			}				
 		}while(choixBase != 0);			
