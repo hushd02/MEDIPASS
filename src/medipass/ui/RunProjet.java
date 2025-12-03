@@ -46,7 +46,7 @@ public class RunProjet {
 			            }
 			            case ADMIN -> {
 			            	AdminMenu adminMenu = new AdminMenu();
-			            	adminMenu.afficherMenuAdmin();
+			            	adminMenu.afficherMenuAdmin(user);
 			            }
 			        }
 			        break;

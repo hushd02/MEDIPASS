@@ -1,5 +1,6 @@
 package medipass.ui;
 
+import medipass.models.Utilisateur;
 import medipass.services.GestionAdministrateur;
 import medipass.utils.Input;
 
@@ -7,10 +8,10 @@ public class AdminMenu{
 
     private final GestionAdministrateur userService = new GestionAdministrateur();
 
-    public void afficherMenuAdmin() {
+    public void afficherMenuAdmin(Utilisateur user) {
 
         int choixA;
-
+ 
         do {
         	System.out.println(" ");
             System.out.println("=================MENU ADMINISTRATEUR ================");
@@ -27,9 +28,30 @@ public class AdminMenu{
         	System.out.println("=====================================================");
         	System.out.println(" ");	
             switch (choixA) {
-	            case 1 -> userService.creerUtilisateur();
-	            case 2 -> userService.modifierUtilisateur();
-	            case 3 -> userService.supprimerUtilisateur();
+	            case 1 -> {
+	            	if(user.getNivAcces()==1) {
+	            		userService.creerUtilisateur();
+	        		}else {	
+	        			System.out.println("Votre compte ne dispose pas du niveau d'accès nécessaire pour exécuter cette fonction");
+	            		System.out.println("Veuillez-vous rapprocher d'un autre l'administrateur de niveau d'accès: 1 pour le modifier");
+	        		}	            
+	            }
+	            case 2 -> {
+	            	if(user.getNivAcces()==1) {
+	            		userService.modifierUtilisateur();
+	        		}else {	
+	        			System.out.println("Votre compte ne dispose pas du niveau d'accès nécessaire pour exécuter cette fonction");
+	            		System.out.println("Veuillez-vous rapprocher d'un autre l'administrateur de niveau d'accès: 1 pour le modifier");
+	        		}   
+	            }
+	            case 3 -> {
+	            	if(user.getNivAcces()==1) {
+	            		userService.supprimerUtilisateur();
+	        		}else {	
+	        			System.out.println("Votre compte ne dispose pas du niveau d'accès nécessaire pour exécuter cette fonction");
+	            		System.out.println("Veuillez-vous rapprocher d'un autre l'administrateur de niveau d'accès: 1 pour le modifier");
+	        		}            
+	            }
 	            case 4 -> userService.afficherUtilisateur();
 	            case 5 -> userService.trouverUtilisateur();
 	            case 6 -> userService.consulterStatSystem();

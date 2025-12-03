@@ -25,7 +25,7 @@ public class MedecinMenu {
             System.out.println("================ MENU MEDECIN ==============");
             System.out.println("1. Consulter et/ou modifier mes disponibilités");
             System.out.println("2. Afficher mes consultations");
-            System.out.println("3. Trouver et/ou faire passer une consultation");
+            System.out.println("3. Trouver et/ou valider une consultation");
             System.out.println("4. Afficher les consultations d'un patient");
             System.out.println("5. Consulter un dossier médical patient");
             System.out.println("0. Déconnexion");

@@ -57,111 +57,119 @@ public class GestionAdministrateur {
     public void creerUtilisateur() {
         System.out.println("===== CRÉATION D’UN UTILISATEUR  =====");
         System.out.println("");
-
-        String nom = Input.readNonEmptyString("Nom : ");
-        String prenom = Input.readNonEmptyString("Prénom : ");
-        boolean sexe=Input.readBooleanSexe("Sexe : ");
-        LocalDate date = Input.readDate("Date de naissance");
-        String login = Input.readNonEmptyString("Login : ");
-        String email = Input.readNonEmptyString("Email : ");
-        String password = Input.readNonEmptyString("Mot de passe : ");
-        long numtel = Input.readLong("Numéro de téléphone : ");
-        System.out.println("");
-
         
-
-        boolean roleJuste = false; boolean quiter = false;
-        Role role = null;
-        while(!roleJuste) {
-	        System.out.println("Veuillez entrer le chiffre corresrpondant au rôle de l'utilisateur : ");
-	        System.out.println("1 - Administrateur; 2 - Médecin; 3 - Infirmier; 4 - Pharmacien");
-	
-	        int choixRole = Input.readInt("Votre choix : ");
+        
+	        boolean cool = false;
+	    while(!cool) {    
+	    	System.out.println("Les données (login, Email et Numéro de téléphone) doivent être unique!!");
+	        String nom = Input.readNonEmptyString("Nom : ");
+	        String prenom = Input.readNonEmptyString("Prénom : ");
+	        boolean sexe=Input.readBooleanSexe("Sexe : ");
+	        LocalDate date = Input.readDate("Date de naissance");
+	        String login = Input.readNonEmptyString("Login : ");
+	        String password = Input.readNonEmptyString("Mot de passe : ");
+	        String email = Input.readNonEmptyString("Email : ");     
+	        long numtel = Input.readLong("Numéro de téléphone : ");
 	        System.out.println("");
 	
-	        // Utilise fromCode(int). Si ton enum a un autre nom, voir note en bas.
-	        role = Role.fromCode(choixRole);
-	        if (role == null) {
-	            quiter = Input.readYesNo("Rôle invalide! Voullez-vous réessayer ? ");
-	            if(!quiter)
-	            	return ;
-	        }else {
-	        	roleJuste = true;
-	        }
-        }
-        Utilisateur newUser = null;
-
-        switch (role) {
-            case MEDECIN -> {
-                boolean cree = Input.readYesNo("Voullez-vous créer le compte Médecin "+nom+" "+prenom+"? ");
-                if (!cree) {return;}
-                long numOrdre = Input.readLong("Numéro de l’ordre des médecins : ");
-                Boolean juste = false;
-                Specialite spe = null ;
-		        while(!juste) {    
-		        	// Affichage des spécialités
-		            System.out.println("");
-		            Specialite.afficherSpecialites();
-		            int codeSpe = Input.readInt("Veuillez indiquer la Spécialite (1 à "+Specialite.values().length+") : ");
-		            spe = Specialite.fromCode(codeSpe);
-		            if (spe == null) {
-		                System.out.println("❌ Spécialité invalide !");
-		            }else
-		            	juste=true;
+	        
+	
+	        boolean roleJuste = false; boolean quiter = false;
+	        Role role = null;
+	        while(!roleJuste) {
+		        System.out.println("Veuillez entrer le chiffre corresrpondant au rôle de l'utilisateur : ");
+		        System.out.println("1 - Administrateur; 2 - Médecin; 3 - Infirmier; 4 - Pharmacien");
+		
+		        int choixRole = Input.readInt("Votre choix : ");
+		        System.out.println("");
+		
+		        // Utilise fromCode(int). Si ton enum a un autre nom, voir note en bas.
+		        role = Role.fromCode(choixRole);
+		        if (role == null) {
+		            quiter = Input.readYesNo("Rôle invalide! Voullez-vous réessayer ? ");
+		            if(!quiter)
+		            	return ;
+		        }else {
+		        	roleJuste = true;
 		        }
-                newUser = new Medecin(
-                        nom, prenom, login,
-                        date,
-                        sexe,
-                        numtel, email,
-                        password, Role.MEDECIN, 4, numOrdre, spe
-                );
-            }
-            case INFIRMIER -> {
-                boolean cree = Input.readYesNo("Voullez-vous créer le compte Infirmier"+nom+" "+prenom+"? ");
-                if (!cree) {return;}
-                long matricule = Input.readLong("Matricule : ");
-                newUser = new Infirmier(
-                        nom, prenom, login,
-                        date,
-                        sexe,
-                        numtel, email,
-                        password, Role.INFIRMIER, 3, matricule, Specialite.AUCUNE
-                );
-            }
-
-            case PHARMACIEN -> {
-                boolean cree = Input.readYesNo("Voullez-vous créer le compte Pharmacien"+nom+" "+prenom+"? ");
-                if (!cree) {return;}
-                long licence = Input.readLong("Numéro licence pharmaceutique : ");
-                newUser = new Pharmacien(
-                        nom, prenom, login,
-                        date,
-                        sexe,
-                        numtel, email,
-                        password, Role.PHARMACIEN, 2, licence, Specialite.AUCUNE
-                );
-            }
-
-            case ADMIN -> {
-                boolean cree = Input.readYesNo("Voullez-vous créer le compte Administrateur"+nom+" "+prenom+"? ");
-                if (!cree) {return;}
-                newUser = new Administrateur(
-                        nom, prenom, login,
-                        date,
-                        sexe,
-                        numtel, email,
-                        password, Role.ADMIN, 1, 0, Specialite.AUCUNE
-                );
-            }
-        }
-
-        if (newUser != null) {
-            GestionUtilisateur gestion = new GestionUtilisateur();
-            gestion.inserer(newUser);
-            System.out.println(" Utilisateur créé avec succès !");
-        }
-       
+	        }
+	        Utilisateur newUser = null;
+	
+	        switch (role) {
+	            case MEDECIN -> {
+	                boolean cree = Input.readYesNo("Voullez-vous créer le compte Médecin "+nom+" "+prenom+"? ");
+	                if (!cree) {return;}
+	                long numOrdre = Input.readLong("Numéro de l’ordre des médecins : ");
+	                Boolean juste = false;
+	                Specialite spe = null ;
+			        while(!juste) {    
+			        	// Affichage des spécialités
+			            System.out.println("");
+			            Specialite.afficherSpecialites();
+			            int codeSpe = Input.readInt("Veuillez indiquer la Spécialite (1 à "+Specialite.values().length+") : ");
+			            spe = Specialite.fromCode(codeSpe);
+			            if (spe == null) {
+			                System.out.println("❌ Spécialité invalide !");
+			            }else
+			            	juste=true;
+			        }
+	                newUser = new Medecin(
+	                        nom, prenom, login,
+	                        date,
+	                        sexe,
+	                        numtel, email,
+	                        password, Role.MEDECIN, 4, numOrdre, spe
+	                );
+	            }
+	            case INFIRMIER -> {
+	                boolean cree = Input.readYesNo("Voullez-vous créer le compte Infirmier "+nom+" "+prenom+"? ");
+	                if (!cree) {return;}
+	                long matricule = Input.readLong("Matricule : ");
+	                newUser = new Infirmier(
+	                        nom, prenom, login,
+	                        date,
+	                        sexe,
+	                        numtel, email,
+	                        password, Role.INFIRMIER, 3, matricule, Specialite.AUCUNE
+	                );
+	            }
+	
+	            case PHARMACIEN -> {
+	                boolean cree = Input.readYesNo("Voullez-vous créer le compte Pharmacien "+nom+" "+prenom+"? ");
+	                if (!cree) {return;}
+	                long licence = Input.readLong("Numéro licence pharmaceutique : ");
+	                newUser = new Pharmacien(
+	                        nom, prenom, login,
+	                        date,
+	                        sexe,
+	                        numtel, email,
+	                        password, Role.PHARMACIEN, 3, licence, Specialite.AUCUNE
+	                );
+	            }
+	
+	            case ADMIN -> {
+	                boolean cree = Input.readYesNo("Voullez-vous créer le compte Administrateur "+nom+" "+prenom+"? ");
+	                if (!cree) {return;}
+	                newUser = new Administrateur(
+	                        nom, prenom, login,
+	                        date,
+	                        sexe,
+	                        numtel, email,
+	                        password, Role.ADMIN, 2, 0, Specialite.AUCUNE
+	                );
+	            }
+	        }
+	
+	        if (newUser != null) {
+	            GestionUtilisateur gestion = new GestionUtilisateur();
+	            cool = gestion.inserer(newUser);
+	            if(cool) {
+	            	System.out.println(" Utilisateur créé avec succès !");
+	            }else {
+	            	cool =Input.readYesNo("Voullez-vous quitter cette option?");
+	            }
+	        }
+	    }
     }
     
     public void afficherUtilisateur() {
@@ -246,41 +254,47 @@ public class GestionAdministrateur {
             System.out.println(" Aucun utilisateur trouvé avec ce login.");
             return;
         }
-
+        
         System.out.println("Utilisateur trouvé : " + user.getNom() + " " + user.getPrenom());
-
-        // --- Nom ---
-        String nom = Input.readOptionalString("Nouveau nom");
-        if (nom != null && !nom.isEmpty()) user.setNom(nom);
-
-        // --- Prénom ---
-        String prenom = Input.readOptionalString("Nouveau prénom");
-        if (prenom!=null && !prenom.isEmpty()) user.setPrenom(prenom);
-
-        // --- Email ---
-        String email = Input.readOptionalString("Nouvel email");
-        if (email!=null && !email.isEmpty()) user.setEmail(email);
-
-        // --- Numéro de téléphone ---
-        Long tel = Input.readOptionalLong("Nouveau numéro de téléphone");
-        if (tel != null) user.setNumTel(tel);
-
-        // --- Mot de passe ---
-        String mdp = Input.readOptionalString("Nouveau mot de passe");
-        if (mdp!=null && !mdp.isEmpty()) user.setPassword(mdp);
-
-        // --- Date de naissance ---
-        LocalDate date = Input.readOptionalDate("Nouvelle date de naissance");
-        if (date != null) user.setDateNaissance(date);
-        
-        // niveau d'accès
-        int nivAcces = Input.readInt("Nouveau niveau d'accès aux dossiers médicaux (Entrer 0 pour ne pas changer) : ");
-        if (nivAcces!=0) user.setNivAcces(nivAcces);
-        
-        boolean good = gestionU.modifier(user);
-        if(good)
-        	System.out.println("Modification enregistrée avec succès");
-        
+        boolean cool =false;
+        while(!cool) {
+	        
+	
+	        // --- Nom ---
+	        String nom = Input.readOptionalString("Nouveau nom");
+	        if (nom != null && !nom.isEmpty()) user.setNom(nom);
+	
+	        // --- Prénom ---
+	        String prenom = Input.readOptionalString("Nouveau prénom");
+	        if (prenom!=null && !prenom.isEmpty()) user.setPrenom(prenom);
+	
+	        // --- Email ---
+	        String email = Input.readOptionalString("Nouvel email");
+	        if (email!=null && !email.isEmpty()) user.setEmail(email);
+	
+	        // --- Numéro de téléphone ---
+	        Long tel = Input.readOptionalLong("Nouveau numéro de téléphone");
+	        if (tel != null) user.setNumTel(tel);
+	
+	        // --- Mot de passe ---
+	        String mdp = Input.readOptionalString("Nouveau mot de passe");
+	        if (mdp!=null && !mdp.isEmpty()) user.setPassword(mdp);
+	
+	        // --- Date de naissance ---
+	        LocalDate date = Input.readOptionalDate("Nouvelle date de naissance");
+	        if (date != null) user.setDateNaissance(date);
+	        
+	        // niveau d'accès
+	        int nivAcces = Input.readInt("Nouveau niveau d'accès aux dossiers médicaux (Entrer 0 pour ne pas changer) : ");
+	        if (nivAcces!=0) user.setNivAcces(nivAcces);
+	        
+	        boolean good = gestionU.modifier(user);
+	        if(good) {
+	        	System.out.println("Modification enregistrée avec succès");
+	        }else {
+	        	cool =Input.readYesNo("Voullez-vous quitter cette option?");
+	        }
+    	}
     }
     
 }

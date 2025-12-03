@@ -259,7 +259,7 @@ public class GestionPatient {
     		return;
     	}else
     		sup =Input.readYesNo("Voullez-vous supprimer ce patient ainsi que son dossier médical? :");
-    	 System.out.println(" ");
+    	System.out.println(" ");
     	if(sup) {
     		DossierMedical dossierP = gestionDM.trouverDossier(pat.getId());
     		

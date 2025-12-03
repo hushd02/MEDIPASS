@@ -30,8 +30,8 @@ public class GestionUtilisateur {
                 + "password TEXT NOT NULL,"
                 + "role TEXT NOT NULL,"
                 + "nivAcces INTEGER NOT NULL,"
-                + "numOrdre INTEGER UNIQUE,"
-                + "specialite TEXT"
+                + "numOrdre INTEGER NOT NULL,"
+                + "specialite TEXT NOT NULL"
                 + ");";
 
         try (Connection conn = ControleBD.getConnection(); // Ouvre la connexion à la BD
@@ -45,7 +45,7 @@ public class GestionUtilisateur {
         }
     }
 
-    public void inserer(Utilisateur user) {
+    public boolean inserer(Utilisateur user) {
         String sql = "INSERT INTO Utilisateur (nom, prenom, login, dateNaissance, sexe, numTel,"
         		+ " email, password, role, nivAcces, numOrdre, specialite) "
         		+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -83,7 +83,9 @@ public class GestionUtilisateur {
 
         } catch (SQLException e) {
             System.err.println("Erreur lors de l'insertion de l'utilisateur : " + e.getMessage());
+            return false;
         }
+		return true;
     }
 
     public List<Utilisateur> recupererAll() {

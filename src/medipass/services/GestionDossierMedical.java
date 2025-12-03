@@ -181,7 +181,7 @@ public class GestionDossierMedical {
 	
 	public void consulterDossier (int nivAcces, int inConsul) {
 		System.out.println("Option en cours : Consulter un dossier Medical");
-		if(nivAcces==1) {
+		if(nivAcces==2) {
 			System.out.println(" ");
     		System.out.println("Votre compte ne dispose pas du niveau d'accès nécessaire pour exécuter cette fonction");
     		System.out.println("Veuillez-vous rapprocher de l'administrateur pour le modifier");
@@ -237,13 +237,8 @@ public class GestionDossierMedical {
 	        case 2 :
 	        	gestionA.consulterAnte(dossier.getId(), nivAcces);
 	        	break;
-	        case 3 :
-	        	if(nivAcces == 3) {
+	        case 3 :  
 	        		gestionC.afficherConsultationI(dossier.getId());
-	        		break;
-	        	}else
-	        		System.out.println("Votre compte ne dispose pas du niveau d'accès nécessaire pour exécuter cette fonction");
-	        		System.out.println("Veuillez-vous rapprocher de l'administrateur pour le modifier");	
 	        		break;
 	        case 0 :System.out.println("Retour au menu…");break;
 	        default : System.out.println("! Option invalide !");break;

@@ -291,7 +291,7 @@ public class GestionConsultation {
 
 	
 		System.out.println("");
-			String motif = Input.readOptionalString("Entrez le motif de votre consultation : ");
+			
 			GestionDisponibilite gestionD = new GestionDisponibilite();
 			GestionUtilisateur gestionU = new GestionUtilisateur();
 			GestionConsultation gestionC = new GestionConsultation();
@@ -323,9 +323,12 @@ public class GestionConsultation {
 					System.out.println("Veuillez entrer un id valide !!!");
 				}
 			}
+			
 			System.out.println(" ");
 			Disponibilite dispo = gestionD.reserverDisponibilite(leDoc);
+			System.out.println(" ");
 			if (dispo != null) {
+				String motif = Input.readOptionalString("Entrez le motif de votre consultation : ");
 				int idMedecin = leDoc.getId();
 				int idDossier = dossier.getId();
 				int idDispo = dispo.getId();
